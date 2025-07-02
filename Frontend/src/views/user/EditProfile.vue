@@ -9,7 +9,7 @@
           <input
               type="email"
               id="email"
-              v-model="user.emailAddress"
+              v-model="user.email"
               placeholder="Email:"
               required
               class="rounded-input"

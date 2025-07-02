@@ -13,7 +13,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class CommentFileStorage {
-    private final String filePath = "src/main/resources/files/comments.json";
+    private final String filePath = "/Users/nikolina/Desktop/Veb programiranje - materijali/WebShop/Backend/WebShopAppREST/src/main/webapp/files/comments.json";
     private final ObjectMapper mapper = new ObjectMapper();
     private List<Comment> comments;
 
