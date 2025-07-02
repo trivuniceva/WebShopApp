@@ -96,4 +96,15 @@ public class ImageFileStorage {
             saveImages();
         }
     }
+    
+    public List<Image> getImagesByUser(String userId) {
+        List<Image> userImages = new ArrayList<>();
+        for (Image img : images) {
+            if (img.getUserId().equals(userId) && !img.isLogicallyDeleted()) {
+                userImages.add(img);
+            }
+        }
+        return userImages;
+    }
+
 }

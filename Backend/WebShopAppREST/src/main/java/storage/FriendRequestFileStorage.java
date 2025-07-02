@@ -84,4 +84,25 @@ public class FriendRequestFileStorage {
         saveRequests();
         System.out.println("FriendRequestFileStorage: Novi zahtev " + newRequest.getId() + " je sačuvan.");
     }
+    
+    public List<FriendRequest> getReceivedRequests(String userId) {
+        List<FriendRequest> received = new ArrayList<>();
+        for (FriendRequest r : requests) {
+            if (r.getReceiverId().equals(userId) && "pending".equalsIgnoreCase(r.getStatus())) {
+                received.add(r);
+            }
+        }
+        return received;
+    }
+
+    public List<FriendRequest> getSentRequests(String userId) {
+        List<FriendRequest> sent = new ArrayList<>();
+        for (FriendRequest r : requests) {
+            if (r.getSenderId().equals(userId) && "pending".equalsIgnoreCase(r.getStatus())) {
+                sent.add(r);
+            }
+        }
+        return sent;
+    }
+
 }
