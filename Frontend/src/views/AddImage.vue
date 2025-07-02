@@ -97,7 +97,7 @@ async function addImage() {
   }
 
   try {
-    const response = await axios.post('http://localhost:8080/api/images/add', newImage)
+    const response = await axios.post('http://localhost:8080/WebShopAppREST/rest/images/add', newImage)
     successMessage.value = 'Photo uploaded successfully!'
     imageText.value = ''
     selectedFile.value = null

@@ -95,7 +95,7 @@ async function submitPost() {
   }
 
   try {
-    const response = await axios.post('http://localhost:8080/api/posts/add', post)
+    const response = await axios.post('http://localhost:8080/WebShopAppREST/rest/posts/add', post)
     successMessage.value = 'Post created successfully!'
     text.value = ''
     selectedFile.value = null
