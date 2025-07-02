@@ -1,0 +1,25 @@
+[ {
+  "id" : "8436efcf-0138-46e1-a7e9-50d74ac69a41",
+  "senderId" : "user_3",
+  "receiverId" : "user_1",
+  "status" : "accepted",
+  "date" : [ 2025, 6, 30, 22, 37, 32, 148636000 ]
+}, {
+  "id" : "77622e84-7050-4506-9fbc-d78309e2cf56",
+  "senderId" : "user_1",
+  "receiverId" : "user_2",
+  "status" : "rejected",
+  "date" : [ 2025, 7, 1, 0, 40, 55, 694043000 ]
+}, {
+  "id" : "41d02910-4332-4a19-9633-b27498853544",
+  "senderId" : "user_1",
+  "receiverId" : "user_2",
+  "status" : "rejected",
+  "date" : [ 2025, 7, 1, 0, 41, 32, 918181000 ]
+}, {
+  "id" : "a21800ba-7a94-49a8-9902-086723fe6ca3",
+  "senderId" : "user_4",
+  "receiverId" : "user_2",
+  "status" : "accepted",
+  "date" : [ 2025, 7, 1, 1, 32, 16, 427716000 ]
+} ]

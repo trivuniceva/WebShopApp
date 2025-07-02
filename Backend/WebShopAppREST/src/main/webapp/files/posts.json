@@ -1,0 +1,81 @@
+[ {
+  "id" : "post_1",
+  "userId" : "user_1",
+  "imagePath" : "/images/posts/post_1_pic.jpg",
+  "text" : "Enjoying nature! Beautiful day for a walk. #nature #walk",
+  "commentIds" : [ "comment_1" ],
+  "creationDate" : "2024-06-26T10:30:00",
+  "logicallyDeleted" : false
+}, {
+  "id" : "post_2",
+  "userId" : "user_1",
+  "imagePath" : null,
+  "text" : "Today I learned something new about programming. Fascinating!",
+  "commentIds" : [ ],
+  "creationDate" : "2024-06-26T14:00:00",
+  "logicallyDeleted" : false
+}, {
+  "id" : "post_3",
+  "userId" : "user_1",
+  "imagePath" : "/images/posts/post_3_pic.jpg",
+  "text" : "New cake recipe, you must try it!",
+  "commentIds" : [ "comment_2" ],
+  "creationDate" : "2024-06-25T18:00:00",
+  "logicallyDeleted" : false
+}, {
+  "id" : "post_4",
+  "userId" : "user_1",
+  "imagePath" : "/images/posts/post_4_pic.jpg",
+  "text" : "Sunset views never get old. #sunset #relax",
+  "commentIds" : [ "comment_3" ],
+  "creationDate" : "2024-06-27T20:15:00",
+  "logicallyDeleted" : false
+}, {
+  "id" : "post_5",
+  "userId" : "user_1",
+  "imagePath" : null,
+  "text" : "Just finished reading an amazing book on mindfulness. Highly recommend!",
+  "commentIds" : [ ],
+  "creationDate" : "2024-06-28T09:45:00",
+  "logicallyDeleted" : false
+}, {
+  "id" : "post_6",
+  "userId" : "user_1",
+  "imagePath" : null,
+  "text" : "Weekend hike was so refreshing. Need to do this more often!",
+  "commentIds" : [ "comment_4" ],
+  "creationDate" : "2024-06-29T08:30:00",
+  "logicallyDeleted" : false
+}, {
+  "id" : "post_7",
+  "userId" : "user_1",
+  "imagePath" : null,
+  "text" : "Trying out a new coding challenge today. Wish me luck!",
+  "commentIds" : [ ],
+  "creationDate" : "2024-06-30T11:00:00",
+  "logicallyDeleted" : false
+}, {
+  "id" : "post_8",
+  "userId" : "user_1",
+  "imagePath" : "/images/posts/post_8_pic.jpg",
+  "text" : "Delicious homemade pasta dinner tonight. #foodie #homemade",
+  "commentIds" : [ "comment_6" ],
+  "creationDate" : "2024-07-01T19:20:00",
+  "logicallyDeleted" : false
+}, {
+  "id" : "ed560181-41b7-4671-a761-b1ede0ffcb3b",
+  "userId" : "user_4",
+  "imagePath" : null,
+  "text" : "Post 1",
+  "commentIds" : [ ],
+  "creationDate" : "2025-06-30T23:20:13.737",
+  "logicallyDeleted" : false
+}, {
+  "id" : "43217166-8547-492f-aaa8-f9d61cfb5e70",
+  "userId" : "user_4",
+  "imagePath" : null,
+  "text" : "post <333",
+  "commentIds" : [ ],
+  "creationDate" : "2025-06-30T23:22:08.885",
+  "logicallyDeleted" : false
+} ]

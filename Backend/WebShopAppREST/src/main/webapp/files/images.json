@@ -1,0 +1,193 @@
+[ {
+  "id" : "image_1",
+  "userId" : "user_1",
+  "path" : "/images/user_uploads/image_1.jpg",
+  "text" : "Mountain view, breathtaking!",
+  "commentIds" : [ "comment_1", "comment_2", "312fa61e-0c2f-4072-9f40-3c0a7e078684" ],
+  "uploadDate" : "2024-06-24T12:00:00",
+  "logicallyDeleted" : false
+}, {
+  "id" : "image_2",
+  "userId" : "user_1",
+  "path" : "/images/user_uploads/image_2.jpg",
+  "text" : "Sunset at sea. Perfect end to the day.",
+  "commentIds" : [ "comment_3" ],
+  "uploadDate" : "2024-06-24T18:30:00",
+  "logicallyDeleted" : false
+}, {
+  "id" : "image_3",
+  "userId" : "user_1",
+  "path" : "/images/user_uploads/image_3.jpg",
+  "text" : "Lost in the green.",
+  "commentIds" : [ "comment_4" ],
+  "uploadDate" : "2024-06-25T10:15:00",
+  "logicallyDeleted" : false
+}, {
+  "id" : "image_4",
+  "userId" : "user_1",
+  "path" : "/images/user_uploads/image_4.jpg",
+  "text" : "Still waters, clear reflections.",
+  "commentIds" : [ "comment_5" ],
+  "uploadDate" : "2024-06-26T08:45:00",
+  "logicallyDeleted" : false
+}, {
+  "id" : "image_5",
+  "userId" : "user_1",
+  "path" : "/images/user_uploads/image_5.jpg",
+  "text" : "Hiking through the wild.",
+  "commentIds" : [ ],
+  "uploadDate" : "2024-06-26T14:00:00",
+  "logicallyDeleted" : false
+}, {
+  "id" : "image_6",
+  "userId" : "user_1",
+  "path" : "/images/user_uploads/image_6.jpg",
+  "text" : "Morning coffee, best ritual.",
+  "commentIds" : [ ],
+  "uploadDate" : "2024-06-27T07:30:00",
+  "logicallyDeleted" : false
+}, {
+  "id" : "image_7",
+  "userId" : "user_2",
+  "path" : "/images/user_uploads/image_7.jpg",
+  "text" : "Weekend reads and peace.",
+  "commentIds" : [ "comment_6", "comment_7" ],
+  "uploadDate" : "2024-06-27T11:20:00",
+  "logicallyDeleted" : false
+}, {
+  "id" : "image_8",
+  "userId" : "user_2",
+  "path" : "/images/user_uploads/image_8.jpg",
+  "text" : "City walk, a moment captured.",
+  "commentIds" : [ "comment_8" ],
+  "uploadDate" : "2024-06-25T09:00:00",
+  "logicallyDeleted" : false
+}, {
+  "id" : "image_9",
+  "userId" : "user_2",
+  "path" : "/images/user_uploads/image_9.jpg",
+  "text" : "Chillin' in the urban jungle.",
+  "commentIds" : [ ],
+  "uploadDate" : "2024-06-26T15:45:00",
+  "logicallyDeleted" : false
+}, {
+  "id" : "image_10",
+  "userId" : "user_2",
+  "path" : "/images/user_uploads/image_10.jpg",
+  "text" : "Rainy day reflections.",
+  "commentIds" : [ ],
+  "uploadDate" : "2024-06-27T10:00:00",
+  "logicallyDeleted" : false
+}, {
+  "id" : "image_11",
+  "userId" : "user_2",
+  "path" : "/images/user_uploads/image_11.jpg",
+  "text" : "Window light and shadows.",
+  "commentIds" : [ ],
+  "uploadDate" : "2024-06-27T13:10:00",
+  "logicallyDeleted" : false
+}, {
+  "id" : "image_12",
+  "userId" : "user_2",
+  "path" : "/images/user_uploads/image_12.jpg",
+  "text" : "Evening bike ride through the park.",
+  "commentIds" : [ "comment_9" ],
+  "uploadDate" : "2024-06-28T19:25:00",
+  "logicallyDeleted" : false
+}, {
+  "id" : "image_13",
+  "userId" : "user_3",
+  "path" : "/images/user_uploads/image_13.jpg",
+  "text" : "Evening bike ride through the park.",
+  "commentIds" : [ "comment_10", "af7a55b5-6fe3-4655-bed7-3fdc542417f1", "de10f398-afea-4f52-81c3-80f93c169f07", "32a03cb2-7fe1-469c-a311-1e99017d975b", "f2baa7d6-5954-43a0-89b0-8723255b0aea", "388559ed-2faa-4c24-b398-006793663c18" ],
+  "uploadDate" : "2024-06-28T19:25:00",
+  "logicallyDeleted" : true
+}, {
+  "id" : "image_14",
+  "userId" : "user_3",
+  "path" : "/images/user_uploads/image_14.jpg",
+  "text" : "Evening bike ride through the park.",
+  "commentIds" : [ "comment_11" ],
+  "uploadDate" : "2024-06-28T19:25:00",
+  "logicallyDeleted" : false
+}, {
+  "id" : "image_15",
+  "userId" : "user_3",
+  "path" : "/images/user_uploads/image_15.jpg",
+  "text" : "Evening bike ride through the park.",
+  "commentIds" : [ ],
+  "uploadDate" : "2024-06-28T19:25:00",
+  "logicallyDeleted" : false
+}, {
+  "id" : "image_16",
+  "userId" : "user_3",
+  "path" : "/images/user_uploads/image_16.jpg",
+  "text" : "Evening bike ride through the park.",
+  "commentIds" : [ ],
+  "uploadDate" : "2024-06-28T19:25:00",
+  "logicallyDeleted" : true
+}, {
+  "id" : "image_17",
+  "userId" : "user_3",
+  "path" : "/images/user_uploads/image_17.jpg",
+  "text" : "Evening bike ride through the park.",
+  "commentIds" : [ ],
+  "uploadDate" : "2024-06-28T19:25:00",
+  "logicallyDeleted" : false
+}, {
+  "id" : "image_18",
+  "userId" : "user_4",
+  "path" : "/images/user_uploads/image_18.jpg",
+  "text" : "Evening bike ride through the park.",
+  "commentIds" : [ "9563a41f-5a2b-4d1d-820c-f0b4ff1fbfbe" ],
+  "uploadDate" : "2024-06-28T19:25:00",
+  "logicallyDeleted" : false
+}, {
+  "id" : "image_19",
+  "userId" : "user_4",
+  "path" : "/images/user_uploads/image_19.jpg",
+  "text" : "Evening bike ride through the park.",
+  "commentIds" : [ ],
+  "uploadDate" : "2024-06-28T19:25:00",
+  "logicallyDeleted" : false
+}, {
+  "id" : "image_20",
+  "userId" : "user_4",
+  "path" : "/images/user_uploads/image_20.jpg",
+  "text" : "Evening bike ride through the park.",
+  "commentIds" : [ ],
+  "uploadDate" : "2024-06-28T19:25:00",
+  "logicallyDeleted" : false
+}, {
+  "id" : "image_21",
+  "userId" : "user_4",
+  "path" : "/images/user_uploads/image_21.jpg",
+  "text" : "Evening bike ride through the park.",
+  "commentIds" : [ ],
+  "uploadDate" : "2024-06-28T19:25:00",
+  "logicallyDeleted" : false
+}, {
+  "id" : "image_22",
+  "userId" : "user_4",
+  "path" : "/images/user_uploads/image_22.jpg",
+  "text" : "Evening bike ride through the park.",
+  "commentIds" : [ ],
+  "uploadDate" : "2024-06-28T19:25:00",
+  "logicallyDeleted" : false
+}, {
+  "id" : "3504b742-f89c-4a89-9824-26d6ace1f3ba",
+  "userId" : "user_4",
+  "path" : "/images/user_uploads/test1.jpg",
+  "text" : "Opis",
+  "commentIds" : [ "340d070d-d4c4-47c9-bcda-dbd0fefb20ea" ],
+  "uploadDate" : "2025-07-01T01:09:06.225562",
+  "logicallyDeleted" : false
+}, {
+  "id" : "fc3d24fc-9a4c-4fb7-8f3d-82bfee9ed0a0",
+  "userId" : "user_4",
+  "path" : "/images/user_uploads/test2.jpg",
+  "text" : "tanjiri",
+  "commentIds" : [ ],
+  "uploadDate" : "2025-07-01T01:16:18.831782",
+  "logicallyDeleted" : false
+} ]
