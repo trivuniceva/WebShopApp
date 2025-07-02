@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class ImageFileStorage {
-    private final String filePath = "src/main/resources/files/images.json";
+    private final String filePath = "/Users/nikolina/Desktop/Veb programiranje - materijali/WebShop/Backend/WebShopAppREST/src/main/webapp/files/images.json";
 
     private final ObjectMapper mapper = new ObjectMapper()
             .registerModule(new JavaTimeModule())

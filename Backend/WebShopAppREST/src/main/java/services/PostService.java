@@ -37,7 +37,7 @@ public class PostService {
     @POST
     @Path("/add")
     public Post addPost(Post post) {
-        return postStorage.addPost(post);
+        postStorage.addPost(post);
+        return post;
     }
 }
-

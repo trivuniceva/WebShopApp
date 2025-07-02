@@ -12,7 +12,7 @@ import java.util.List;
 
 public class PostFileStorage {
 
-    private final String filePath = "src/main/resources/files/posts.json";
+    private final String filePath = "/Users/nikolina/Desktop/Veb programiranje - materijali/WebShop/Backend/WebShopAppREST/src/main/webapp/files/posts.json";
 
     private final ObjectMapper mapper = new ObjectMapper()
             .registerModule(new JavaTimeModule())
@@ -62,5 +62,16 @@ public class PostFileStorage {
         posts.add(post);
         savePosts();
     }
+    
+    public List<Post> getPostsByUser(String userId) {
+        List<Post> userPosts = new ArrayList<>();
+        for (Post post : posts) {
+            if (post.getUserId().equals(userId) && !post.isLogicallyDeleted()) {
+                userPosts.add(post);
+            }
+        }
+        return userPosts;
+    }
+
 
 }
