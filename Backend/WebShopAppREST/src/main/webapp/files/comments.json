@@ -168,5 +168,32 @@
   "text" : "<3",
   "commentDate" : [ 2025, 7, 1, 9, 31, 9, 80000000 ],
   "editDate" : null,
+  "logicallyDeleted" : true
+}, {
+  "id" : "8d55ec60-fb05-4538-9fa6-007334698980",
+  "objectId" : "image_1",
+  "objectType" : "IMAGE",
+  "userId" : "user_1",
+  "text" : "<3",
+  "commentDate" : [ 2025, 7, 3, 2, 4, 12, 236000000 ],
+  "editDate" : null,
+  "logicallyDeleted" : true
+}, {
+  "id" : "eec089a5-36ba-4ed2-845e-8f875c07ef8f",
+  "objectId" : "image_1",
+  "objectType" : "IMAGE",
+  "userId" : "user_1",
+  "text" : "<3333",
+  "commentDate" : [ 2025, 7, 3, 2, 6, 30, 258000000 ],
+  "editDate" : null,
+  "logicallyDeleted" : true
+}, {
+  "id" : "99ed9f56-5fcf-40bc-b9ea-411a46869651",
+  "objectId" : "image_2",
+  "objectType" : "IMAGE",
+  "userId" : "user_1",
+  "text" : "<33333",
+  "commentDate" : [ 2025, 7, 3, 2, 6, 44, 473000000 ],
+  "editDate" : null,
   "logicallyDeleted" : false
 } ]

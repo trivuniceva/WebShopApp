@@ -23,6 +23,7 @@ public class CommentFileStorage {
     }
 
     public void loadComments() {
+    	System.out.println("loading....");
         try {
             File file = new File(filePath);
             if (!file.exists() || file.length() == 0) {
@@ -63,10 +64,14 @@ public class CommentFileStorage {
     }
 
     public Comment addComment(Comment newComment) {
+
+    	System.out.println("addddd kom ");
+    	
         if (newComment.getId() == null || newComment.getId().isEmpty()) {
             newComment.setId(UUID.randomUUID().toString());
         }
         comments.add(newComment);
+        
         saveComments();
         return newComment;
     }

@@ -76,5 +76,15 @@ public class UserFileStorage {
             }
         }
     }
+
+	public void update(String id, User updatedUser) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public boolean removeFriend(String userId, String friendId) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
 

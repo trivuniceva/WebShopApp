@@ -105,4 +105,20 @@ public class FriendRequestFileStorage {
         return sent;
     }
 
+	public FriendRequest sendRequest(String senderId, String receiverId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public boolean acceptRequest(String requestId) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public boolean rejectRequest(String requestId) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+    
+
 }

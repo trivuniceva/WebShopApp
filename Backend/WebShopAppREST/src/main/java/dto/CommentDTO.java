@@ -1,6 +1,5 @@
 package dto;
 
-
 import java.time.LocalDateTime;
 
 public class CommentDTO {
@@ -60,4 +59,3 @@ public class CommentDTO {
         this.commentDate = commentDate;
     }
 }
-
