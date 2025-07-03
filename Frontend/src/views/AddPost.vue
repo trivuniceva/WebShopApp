@@ -56,21 +56,27 @@ const store = useStore()
 const loggedUser = store.state.loggedUser
 
 const text = ref('')
-const selectedFile = ref(null)
-const previewImage = ref('')
+const selectedFile = ref(null) // Keep for filename
+const previewImage = ref('') // For local preview
+const base64ImageString = ref(null) // <--- NEW: To store the Base64 string for sending
 const successMessage = ref('')
 const errorMessage = ref('')
 
 function onImageChange(event) {
   const file = event.target.files[0]
-  selectedFile.value = file
+  selectedFile.value = file // Keep reference to file to get its name
 
   if (file) {
     const reader = new FileReader()
-    reader.onload = () => {
-      previewImage.value = reader.result
+    reader.onload = (e) => {
+      previewImage.value = e.target.result // For displaying preview
+      // Extract only the Base64 part (remove "data:image/jpeg;base64,")
+      base64ImageString.value = e.target.result.split(',')[1]; // <--- CRUCIAL: Get Base64 part
     }
-    reader.readAsDataURL(file)
+    reader.readAsDataURL(file) // Read file as Data URL (Base64)
+  } else {
+    previewImage.value = '';
+    base64ImageString.value = null;
   }
 }
 
@@ -84,25 +90,42 @@ async function submitPost() {
   }
 
   const postId = uuidv4()
+  let imagePath = null;
+  if (selectedFile.value) {
+    // Construct the web-accessible path for the image
+    // Use postId to make filename unique to avoid overwrites
+    const filename = `${postId}_${selectedFile.value.name}`;
+    imagePath = `/WebShopAppREST/files/images/${filename}`;
+  }
+
+
   const post = {
     id: postId,
     userId: loggedUser.id,
-    imagePath: selectedFile.value ? `/images/posts/${selectedFile.value.name}` : null,
+    imagePath: imagePath, // This is the path where it will be saved on the server
+    base64Image: base64ImageString.value, // <--- NEW: Send the Base64 string
     text: text.value,
     commentIds: [],
-    creationDate: new Date().toISOString(),
+    creationDate: new Date().toISOString(), // Ensure this format matches OffsetDateTime
     logicallyDeleted: false
   }
 
   try {
-    const response = await axios.post('http://localhost:8080/WebShopAppREST/rest/posts/add', post)
+    // Send as application/json again
+    const response = await axios.post('http://localhost:8080/WebShopAppREST/rest/posts/add', post, {
+      headers: {
+        'Content-Type': 'application/json' // Back to JSON
+      }
+    })
     successMessage.value = 'Post created successfully!'
     text.value = ''
     selectedFile.value = null
     previewImage.value = ''
-    document.getElementById('post-image').value = null
+    base64ImageString.value = null; // Clear Base64 string
+    document.getElementById('post-image').value = null // Clear the file input
   } catch (err) {
-    errorMessage.value = 'Failed to create post.'
+    console.error('Error creating post:', err);
+    errorMessage.value = 'Failed to create post.' + (err.response?.data || err.message);
   }
 }
 </script>

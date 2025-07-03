@@ -9,7 +9,7 @@
   "gender" : "Male",
   "role" : "User",
   "profilePicturePath" : "/images/profile/petra.jpg",
-  "postIds" : [ "post_1", "post_2", "post_3", "post_4", "post_5", "post_6", "post_7", "post_8" ],
+  "postIds" : [ "post_1", "post_2", "post_3", "post_4", "post_5", "post_6", "post_7", "post_8", "4a9c6b6e-f7f3-4602-98d2-fbe4aab4131c" ],
   "imageIds" : [ "image_1", "image_2", "image_3", "image_4", "image_5", "image_6" ],
   "friendRequestsSent" : [ "edd78e4a-570b-41d1-bf09-eff4b973229e", "61bababa-e21d-4c70-ab5d-d1cf874fec12", "53b5f164-b9f3-4aed-b047-23f48890f2db", "79abcb31-1abe-4a4c-ba6d-4f4418c2baaf", "ebaa48f9-0393-4da4-8bd0-08a69728f650", "77622e84-7050-4506-9fbc-d78309e2cf56", "41d02910-4332-4a19-9633-b27498853544" ],
   "friendRequestsReceived" : [ "8436efcf-0138-46e1-a7e9-50d74ac69a41" ],
