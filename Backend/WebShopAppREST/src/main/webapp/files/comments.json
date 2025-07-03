@@ -250,4 +250,13 @@
   "commentDate" : [ 2025, 7, 3, 2, 43, 8, 702000000 ],
   "editDate" : null,
   "logicallyDeleted" : false
+}, {
+  "id" : "49103888-6321-4d89-bcf8-52b0a4d97e5e",
+  "objectId" : "e44c17b3-1154-447f-a1b5-58aef550b02f",
+  "objectType" : "POST",
+  "userId" : "user_3",
+  "text" : "nesto",
+  "commentDate" : [ 2025, 7, 3, 14, 43, 37, 89000000 ],
+  "editDate" : null,
+  "logicallyDeleted" : true
 } ]
