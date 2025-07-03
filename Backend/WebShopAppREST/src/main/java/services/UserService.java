@@ -200,4 +200,39 @@ public class UserService {
     }
     
     
+    @POST
+    @Path("/register")
+    public Response registerUser(User newUser) {
+        UserFileStorage storage = getUserStorage();
+
+        // Provera da li korisnik sa istim username-om ili email-om već postoji
+        if (storage.findByUsername(newUser.getUsername()) != null) {
+            return Response.status(Response.Status.CONFLICT).entity("Username is already taken.").build();
+        }
+
+        if (storage.getAllUsers().stream().anyMatch(u -> u.getEmailAddress().equalsIgnoreCase(newUser.getEmailAddress()))) {
+            return Response.status(Response.Status.CONFLICT).entity("Email is already in use.").build();
+        }
+
+        // Generiši ID korisnika (možeš koristiti UUID ili jednostavnu logiku)
+        newUser.setId("user_" + (storage.getAllUsers().size() + 1));
+
+        // Postavi default vrednosti ako ih frontend ne šalje
+        if (newUser.getRole() == null) newUser.setRole("User");
+        newUser.setBlocked(false);
+        newUser.setLogicallyDeleted(false);
+        newUser.setPrivateAccount(false);
+        newUser.setFriendListIds(new ArrayList<>());
+        newUser.setFriendRequestsReceived(new ArrayList<>());
+        newUser.setFriendRequestsSent(new ArrayList<>());
+        newUser.setImageIds(new ArrayList<>());
+        newUser.setPostIds(new ArrayList<>());
+
+        storage.getAllUsers().add(newUser);
+        storage.saveUsers();
+
+        return Response.status(Response.Status.CREATED).entity(newUser).build();
+    }
+
+    
 }

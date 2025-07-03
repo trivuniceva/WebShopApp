@@ -7,48 +7,105 @@
       <input type="text" v-model="firstName" placeholder="Name:" required class="rounded-input" />
       <input type="text" v-model="lastName" placeholder="Lastname:" required class="rounded-input" />
 
+      <input type="date" v-model="dateOfBirth" placeholder="Date of Birth:" class="rounded-input" />
+
       <div class="gender-radio">
         <label for="female">Female</label>
-        <input type="radio" id="female" value="female" v-model="gender" required />
-
-        <label for="male">Male</label>
-        <input type="radio" id="male" value="male" v-model="gender" required />
-      </div>
+        <input type="radio" id="female" value="Female" v-model="gender" required /> <label for="male">Male</label>
+        <input type="radio" id="male" value="Male" v-model="gender" required /> </div>
 
       <input type="password" v-model="password" placeholder="Password:" required class="rounded-input" />
       <input type="password" v-model="confirmPassword" placeholder="Confirm password:" required class="rounded-input" />
 
       <button type="submit" class="rounded-button">Sign Up</button>
     </form>
+
+    <p v-if="successMessage" class="success-message">{{ successMessage }}</p>
+    <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
   </div>
 </template>
 
 <script>
+import { useRouter } from 'vue-router'; // Uvezi useRouter
+
 export default {
   name: "SignupView",
+  setup() { // Koristi setup za Composition API hooks
+    const router = useRouter(); // Inicijalizuj router
+    return { router }; // Vrati router da bude dostupan u templateu ili opcijama
+  },
   data() {
     return {
       username: '',
       email: '',
       firstName: '',
       lastName: '',
+      dateOfBirth: '', // Dodaj polje za datum rođenja
       gender: '',
       password: '',
-      confirmPassword: ''
+      confirmPassword: '',
+      successMessage: '',
+      errorMessage: ''
     }
   },
   methods: {
-    register() {
-      console.log("Registracija poslana", this.username);
+    async register() {
+      this.successMessage = ''; // Resetuj poruke
+      this.errorMessage = '';
+
+      if (this.password !== this.confirmPassword) {
+        this.errorMessage = "Passwords do not match.";
+        return;
+      }
+
+      const userData = {
+        username: this.username,
+        password: this.password,
+        emailAddress: this.email,
+        firstName: this.firstName,
+        lastName: this.lastName,
+        dateOfBirth: this.dateOfBirth, // Dodaj datum rođenja
+        gender: this.gender,
+        // Role i ostale podrazumevane vrednosti postavlja backend
+      };
+
+      try {
+        const response = await fetch('http://localhost:8080/WebShopAppREST/rest/users/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(userData)
+        });
+
+        if (response.ok) { // Status 200-299 (uključujući 201 Created)
+          const registeredUser = await response.json();
+          this.successMessage = `Registration successful! Welcome, ${registeredUser.firstName}! You can now log in.`;
+          // Opciono: Preusmeri korisnika na login stranicu nakon uspešne registracije
+          setTimeout(() => {
+            this.router.push('/login');
+          }, 2000); // Preusmeri nakon 2 sekunde
+        } else {
+          // Ako je odgovor status 4xx ili 5xx, pročitaj telo odgovora za poruku
+          const errorText = await response.text(); // Backend šalje poruku kao plain text
+          this.errorMessage = errorText || 'Registration failed. Please try again.';
+          console.error('Registration error:', response.status, errorText);
+        }
+      } catch (error) {
+        console.error('Network or other error:', error);
+        this.errorMessage = 'An unexpected error occurred. Please try again later.';
+      }
     }
   }
 }
 </script>
 
 <style scoped>
+/* Svi tvoji postojeći stilovi */
 .signup-container {
   position: relative;
-  height: 580px;
+  height: auto; /* Prilagodi visinu kontejnera da bude dinamična */
+  min-height: 580px; /* Minimalna visina */
   width: 424px;
   text-align: center;
   padding-top: 40px;
@@ -117,5 +174,28 @@ export default {
 
 h2 {
   color: white;
+}
+
+/* Stilovi za poruke o uspehu/grešci */
+.success-message {
+  color: #e6ffe6; /* Svetlo zelena */
+  background-color: rgba(40, 167, 69, 0.2); /* Blaga zelena pozadina */
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 20px;
+  font-weight: bold;
+  position: relative;
+  z-index: 2;
+}
+
+.error-message {
+  color: #ffcccc; /* Svetlo crvena */
+  background-color: rgba(220, 53, 69, 0.2); /* Blaga crvena pozadina */
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 20px;
+  font-weight: bold;
+  position: relative;
+  z-index: 2;
 }
 </style>
