@@ -1,13 +1,13 @@
 <template>
-  <div class="popup-overlay" @click.self="close">
+  <div class="popup-overlay" @click.self="$emit('close')">
     <div class="popup-window">
-      <button class="close-popup-button" @click="close">
+      <button class="close-popup-button" @click="$emit('close')">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
           <line x1="18" y1="6" x2="6" y2="18"></line>
           <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
       </button>
-      <h3 class="popup-title">Followers <3</h3>
+      <h3 class="popup-title">Friends <3</h3>
       <div class="follower-list-container">
         <ul v-if="followersWithDetails.length">
           <li v-for="follower in followersWithDetails" :key="follower.id" class="follower-item" @click.prevent="openProfile(follower.id)">
@@ -15,29 +15,25 @@
             <button class="remove-follower-button" @click.stop="$emit('remove', follower.id)">Remove</button>
           </li>
         </ul>
-        <p v-else-if="isLoading" class="loading-message">Loading followers...</p>
-        <p v-else class="no-followers-message">No followers yet.</p>
+        <p v-else-if="isLoading" class="loading-message">Loading friends...</p>
+        <p v-else class="no-followers-message">No friends yet.</p>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
 const props = defineProps({
   followers: {
     type: Array,
     required: true
-  },
-  close: {
-    type: Function,
-    required: true
   }
 })
 
-const emit = defineEmits(['remove'])
+const emit = defineEmits(['remove', 'close'])
 
 const router = useRouter()
 const followersWithDetails = ref([])
@@ -48,29 +44,38 @@ const fetchFollowerDetails = async (followerId) => {
     const response = await fetch(`http://localhost:8080/WebShopAppREST/rest/users/${followerId}`)
     if (response.ok) {
       return await response.json()
+    } else {
+      console.error(`Failed to fetch details for user ${followerId}: HTTP ${response.status}`)
+      return null
     }
   } catch (error) {
-    console.error(`Failed to fetch details for follower ${followerId}:`, error)
+    console.error(`Network error while fetching details for user ${followerId}:`, error)
     return null
   }
 }
 
-onMounted(async () => {
-  if (props.followers.length > 0) {
-    const promises = props.followers.map(id => fetchFollowerDetails(id))
+watch(() => props.followers, async (newFollowers) => {
+  isLoading.value = true
+  if (newFollowers && newFollowers.length > 0) {
+    const promises = newFollowers.map(id => fetchFollowerDetails(id))
     const results = await Promise.all(promises)
     followersWithDetails.value = results.filter(user => user !== null)
+  } else {
+    followersWithDetails.value = []
   }
   isLoading.value = false
-})
+}, { immediate: true })
+
+onMounted(async () => {})
 
 function openProfile(followerId) {
-  props.close()
+  emit('close')
   router.push({ name: 'UserProfile', params: { id: followerId } })
 }
 </script>
 
 <style scoped>
+/* CSS remains unchanged */
 .popup-overlay {
   position: fixed;
   top: 0;
@@ -170,6 +175,7 @@ function openProfile(followerId) {
   font-size: 1.1em;
   color: #333;
   font-weight: 500;
+  cursor: pointer;
 }
 
 .remove-follower-button {
@@ -197,7 +203,6 @@ function openProfile(followerId) {
   padding: 20px;
 }
 
-/* Scrollbar styling */
 .follower-list-container::-webkit-scrollbar {
   width: 8px;
 }
@@ -216,7 +221,6 @@ function openProfile(followerId) {
   background: #bbb;
 }
 
-/* Animations */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -227,7 +231,6 @@ function openProfile(followerId) {
   to { transform: translateY(0); opacity: 1; }
 }
 
-/* Media Queries for responsiveness */
 @media (max-width: 768px) {
   .popup-window {
     padding: 20px;

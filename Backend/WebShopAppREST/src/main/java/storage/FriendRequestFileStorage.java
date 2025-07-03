@@ -95,4 +95,16 @@ public class FriendRequestFileStorage {
                 .filter(fr -> fr.getSenderId().equals(userId))
                 .collect(Collectors.toList());
     }
+    
+    
+    public void removeFriendRequestRecords(String user1Id, String user2Id) {
+        if (requests == null) return;
+
+        requests.removeIf(req ->
+            (req.getSenderId().equals(user1Id) && req.getReceiverId().equals(user2Id) ||
+             req.getSenderId().equals(user2Id) && req.getReceiverId().equals(user1Id)) &&
+            "accepted".equalsIgnoreCase(req.getStatus())
+        );
+        saveRequests();
+    }
 }

@@ -1,43 +1,13 @@
 [ {
-  "id" : "8436efcf-0138-46e1-a7e9-50d74ac69a41",
-  "senderId" : "user_3",
-  "receiverId" : "user_1",
-  "status" : "accepted",
-  "date" : [ 2025, 6, 30, 22, 37, 32, 148636000 ]
-}, {
-  "id" : "77622e84-7050-4506-9fbc-d78309e2cf56",
-  "senderId" : "user_1",
-  "receiverId" : "user_2",
-  "status" : "rejected",
-  "date" : [ 2025, 7, 1, 0, 40, 55, 694043000 ]
-}, {
-  "id" : "41d02910-4332-4a19-9633-b27498853544",
-  "senderId" : "user_1",
-  "receiverId" : "user_2",
-  "status" : "rejected",
-  "date" : [ 2025, 7, 1, 0, 41, 32, 918181000 ]
-}, {
-  "id" : "a21800ba-7a94-49a8-9902-086723fe6ca3",
+  "id" : "6958d757-714a-4aaa-bc2e-19be671cb631",
   "senderId" : "user_4",
   "receiverId" : "user_2",
-  "status" : "accepted",
-  "date" : [ 2025, 7, 1, 1, 32, 16, 427716000 ]
-}, {
-  "id" : "2b0ef105-14e9-4b9f-b634-9da8b939bce6",
-  "senderId" : "user_1",
-  "receiverId" : "user_2",
-  "status" : "accepted",
-  "date" : [ 2025, 7, 3, 3, 32, 12, 383641000 ]
-}, {
-  "id" : "6553c92b-c76a-4f50-8f6f-39fe764ecc23",
-  "senderId" : "user_2",
-  "receiverId" : "user_3",
   "status" : "rejected",
-  "date" : [ 2025, 7, 3, 3, 41, 6, 631602000 ]
+  "date" : [ 2025, 7, 3, 4, 5, 39, 892291000 ]
 }, {
-  "id" : "f239e1b5-87f1-4f3c-b2ec-c03b57cdeff9",
-  "senderId" : "user_3",
-  "receiverId" : "user_2",
+  "id" : "8cad47cb-4b2b-4ecd-8cce-5ed04eb6ad76",
+  "senderId" : "user_2",
+  "receiverId" : "user_4",
   "status" : "accepted",
-  "date" : [ 2025, 7, 3, 3, 41, 18, 167483000 ]
+  "date" : [ 2025, 7, 3, 4, 5, 48, 949007000 ]
 } ]

@@ -16,7 +16,12 @@
           </template>
 
           <div v-else-if="loggedUser && user.id !== loggedUser.id" class="friend-action-section">
-            <button v-if="!isFriend(user.id) && !hasSentRequest(user.id) && !hasReceivedRequest(user.id)"
+            <button v-if="isFriend(user.id)"
+                    @click="handleRemoveFriend(user.id)"
+                    class="add-friend-button">
+              Remove Friend
+            </button>
+            <button v-else-if="!hasSentRequest(user.id) && !hasReceivedRequest(user.id)"
                     @click="sendFriendRequest(user.id)"
                     class="add-friend-button">
               Add Friend
@@ -32,9 +37,6 @@
                 Reject
               </button>
             </div>
-            <span v-else-if="isFriend(user.id)" class="pending-request-message">
-              Friends
-            </span>
           </div>
 
         </div>
@@ -159,7 +161,7 @@ const canViewContent = computed(() => {
   if (!user.value) return false
   if (!user.value.privateAccount) return true
   if (loggedUser.value && loggedUser.value.id === user.value.id) return true
-  if (loggedUser.value && user.value.friendListIds && loggedUser.value.friendListIds.includes(user.value.id)) {
+  if (loggedUser.value && user.value.friendListIds && loggedUser.value.friendListIds.includes(loggedUser.value.id)) {
     return true
   }
   return false
@@ -193,6 +195,7 @@ async function fetchUserData(id) {
       if (receivedRequestsResponse.ok) {
         friendRequestsReceived.value = await receivedRequestsResponse.json();
       } else {
+        console.error('Failed to load received friend requests for logged user', receivedRequestsResponse.status);
         friendRequestsReceived.value = [];
       }
 
@@ -200,14 +203,19 @@ async function fetchUserData(id) {
       if (sentRequestsResponse.ok) {
         friendRequestsSent.value = await sentRequestsResponse.json();
       } else {
-        friendRequestsSent.value = [];
+        console.error('Failed to load sent friend requests for logged user', sentRequestsResponse.status);
+        friendRequestsSent.value = []; // Resetuj ako ne uspe
       }
 
       const updatedLoggedUserResponse = await fetch(`http://localhost:8080/WebShopAppREST/rest/users/${loggedUser.value.id}`);
       if (updatedLoggedUserResponse.ok) {
         const updatedLoggedUser = await updatedLoggedUserResponse.json();
         store.commit('setLoggedUser', updatedLoggedUser);
+        console.log('Logged user updated in store after data fetch.');
+      } else {
+        console.error('Failed to fetch updated logged user data.');
       }
+
     } else {
       friendRequestsReceived.value = [];
       friendRequestsSent.value = [];
@@ -320,7 +328,10 @@ async function acceptFriendRequest(profileUserId) {
   const requestToAccept = friendRequestsReceived.value.find(
       req => req.senderId === profileUserId && req.receiverId === loggedUser.value.id && req.status === 'pending'
   );
-  if (!requestToAccept) return;
+  if (!requestToAccept) {
+    console.error('Request not found or not pending.');
+    return;
+  }
   await handleAcceptRequestWrapper(requestToAccept.id);
 }
 
@@ -328,7 +339,10 @@ async function rejectFriendRequest(profileUserId) {
   const requestToReject = friendRequestsReceived.value.find(
       req => req.senderId === profileUserId && req.receiverId === loggedUser.value.id && req.status === 'pending'
   );
-  if (!requestToReject) return;
+  if (!requestToReject) {
+    console.error('Request not found or not pending.');
+    return;
+  }
   await handleRejectRequestWrapper(requestToReject.id);
 }
 
@@ -341,6 +355,7 @@ async function handleRemoveFriend(friendId) {
         }
     );
     if (response.ok) {
+      console.log('Friend removed successfully!');
       await fetchUserData(user.value.id);
     } else {
       const errorBody = await response.text();
@@ -350,6 +365,7 @@ async function handleRemoveFriend(friendId) {
     alert('An error occurred while removing the friend.');
   }
 }
+
 </script>
 
 <style scoped>
