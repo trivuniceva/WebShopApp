@@ -5,7 +5,9 @@ export async function loginUser(credentials) {
         body: JSON.stringify(credentials)
     });
     if (!response.ok) {
-        throw new Error('Login failed');
+        const errorMessage = await response.text();
+        console.error("Backend error message:", errorMessage);
+        throw new Error(errorMessage || 'Login failed');
     }
     return await response.json();
 }

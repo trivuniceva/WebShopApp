@@ -92,5 +92,5 @@
   "friendListIds" : [ "user_2", "user_3" ],
   "privateAccount" : true,
   "logicallyDeleted" : false,
-  "blocked" : false
+  "blocked" : true
 } ]

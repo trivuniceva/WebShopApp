@@ -131,23 +131,19 @@ public class UserService {
             return Response.status(Response.Status.NOT_FOUND).entity("One or both users not found.").build();
         }
 
-        // Kreiranje Set-ova za brže pretraživanje
         Set<String> user1Friends = new HashSet<>(user1.getFriendListIds());
         Set<String> user2Friends = new HashSet<>(user2.getFriendListIds());
 
-        // Pronalaženje preseka (zajedničkih prijatelja ID-eva)
         Set<String> commonFriendIds = user1Friends.stream()
                                             .filter(user2Friends::contains)
                                             .collect(Collectors.toSet());
 
-        // Konvertovanje ID-eva u objekte User
         List<User> commonFriends = new ArrayList<>();
         for (String friendId : commonFriendIds) {
             User friend = getUserStorage().findById(friendId);
             if (friend != null) {
-                // Ne šalji osetljive informacije kao što su lozinka
-                friend.setPassword(null); // Čisti lozinku pre slanja na frontend
-                friend.setFriendListIds(null); // Možda ne želiš da šalješ i njihove liste prijatelja
+                friend.setPassword(null);
+                friend.setFriendListIds(null);
                 friend.setFriendRequestsReceived(null);
                 friend.setFriendRequestsSent(null);
                 commonFriends.add(friend);
@@ -157,4 +153,51 @@ public class UserService {
         return Response.ok(commonFriends).build();
     }
 
+    @PUT
+    @Path("/{userId}/block") 
+    public Response blockUser(@PathParam("userId") String userId) {
+        User userToBlock = getUserStorage().findById(userId);
+
+        if (userToBlock == null) {
+            return Response.status(Response.Status.NOT_FOUND).entity("User not found.").build();
+        }
+
+        if ("Administrator".equals(userToBlock.getRole())) {
+            return Response.status(Response.Status.FORBIDDEN).entity("Cannot block an administrator.").build();
+        }
+
+        if (userToBlock.isBlocked()) {
+            return Response.status(Response.Status.OK).entity("User is already blocked.").build();
+        }
+
+        userToBlock.setBlocked(true);
+        getUserStorage().updateUser(userToBlock); 
+
+        return Response.ok("User " + userId + " successfully blocked.").build();
+    }
+    
+    @PUT
+    @Path("/{userId}/unblock") 
+    public Response unblockUser(@PathParam("userId") String userId) {
+        User userToUnblock = getUserStorage().findById(userId);
+
+        if (userToUnblock == null) {
+            return Response.status(Response.Status.NOT_FOUND).entity("User not found.").build();
+        }
+
+        if ("Administrator".equals(userToUnblock.getRole())) {
+            return Response.status(Response.Status.FORBIDDEN).entity("Cannot unblock an administrator (administrators should not be blocked).").build();
+        }
+
+        if (!userToUnblock.isBlocked()) {
+            return Response.status(Response.Status.OK).entity("User is not currently blocked.").build();
+        }
+
+        userToUnblock.setBlocked(false); 
+        getUserStorage().updateUser(userToUnblock); 
+
+        return Response.ok("User " + userId + " successfully unblocked.").build();
+    }
+    
+    
 }

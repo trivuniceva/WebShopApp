@@ -40,14 +40,19 @@
         </div>
 
         <ul class="user-list">
-          <li
-              v-for="user in sortedUsers"
-              :key="user.id"
-              @click="navigateToUserProfile(user.id)"
-              class="user-list-item"
-          >
-            <span class="user-name">{{ user.firstName }} {{ user.lastName }}</span>
-            <span class="user-dob">{{ user.dateOfBirth }}</span>
+          <li v-for="user in sortedUsers" :key="user.id" class="user-list-item">
+            <div @click="navigateToUserProfile(user.id)" class="user-info-clickable">
+              <span class="user-name">{{ user.firstName }} {{ user.lastName }}</span>
+              <span class="user-dob">{{ user.dateOfBirth }}</span>
+            </div>
+
+            <button
+                v-if="loggedUser && loggedUser.role === 'Administrator' && user.role !== 'Administrator'"
+                @click.stop="toggleBlockStatus(user)"
+                :class="['action-button', { 'block-button-style': !user.blocked, 'unblock-button-style': user.blocked }]"
+            >
+              {{ user.blocked ? 'Unblock User' : 'Block User' }}
+            </button>
           </li>
         </ul>
       </div>
@@ -64,7 +69,7 @@ import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 
 const store = useStore()
-const router = useRouter() // Use the useRouter composable
+const router = useRouter()
 const users = ref([])
 const filteredUsers = ref([])
 
@@ -74,50 +79,77 @@ const startDate = ref('')
 const endDate = ref('')
 const sortOption = ref('firstName')
 
+const loggedUser = computed(() => {
+  const user = store.getters.getLoggedUser
+  return user
+})
+
 const fetchUsers = async () => {
-  const response = await fetch('http://localhost:8080/WebShopAppREST/rest/users')
-  if (!response.ok) {
-    console.error('Ne mogu da učitam korisnike')
-    return
+  try {
+    const response = await fetch('http://localhost:8080/WebShopAppREST/rest/users')
+    if (!response.ok) return
+    const fetchedUsers = await response.json()
+    users.value = fetchedUsers.map(user => ({
+      ...user,
+      blocked: user.blocked || false
+    }))
+    searchUsers()
+  } catch (error) {
+    console.error('Error fetching users:', error)
   }
-  users.value = await response.json()
-  filteredUsers.value = [...users.value]
 }
 
 const searchUsers = () => {
   filteredUsers.value = users.value.filter(user => {
     const matchName = searchName.value ? user.firstName.toLowerCase().includes(searchName.value.toLowerCase()) : true
     const matchLastName = searchLastName.value ? user.lastName.toLowerCase().includes(searchLastName.value.toLowerCase()) : true
-
-    const userDobStr = user.dateOfBirth;
-    const startDobStr = startDate.value;
-    const endDobStr = endDate.value;
-
-    const matchDate =
-        (!startDobStr || userDobStr >= startDobStr) &&
-        (!endDobStr || userDobStr <= endDobStr)
-
+    const userDobStr = user.dateOfBirth
+    const startDobStr = startDate.value
+    const endDobStr = endDate.value
+    const matchDate = (!startDobStr || userDobStr >= startDobStr) && (!endDobStr || userDobStr <= endDobStr)
     return matchName && matchLastName && matchDate
   })
 }
 
 const sortedUsers = computed(() => {
   return [...filteredUsers.value].sort((a, b) => {
-    if (sortOption.value === 'firstName') {
-      return a.firstName.localeCompare(b.firstName)
-    } else if (sortOption.value === 'lastName') {
-      return a.lastName.localeCompare(b.lastName)
-    } else if (sortOption.value === 'dateOfBirth') {
-      // Assuming dateOfBirth is in a sortable string format like 'YYYY-MM-DD'
-      return a.dateOfBirth.localeCompare(b.dateOfBirth)
-    }
+    if (sortOption.value === 'firstName') return a.firstName.localeCompare(b.firstName)
+    if (sortOption.value === 'lastName') return a.lastName.localeCompare(b.lastName)
+    if (sortOption.value === 'dateOfBirth') return a.dateOfBirth.localeCompare(b.dateOfBirth)
     return 0
   })
 })
 
-// Function to navigate to the user profile page
 const navigateToUserProfile = (userId) => {
   router.push({ name: 'UserProfile', params: { id: userId } })
+}
+
+const toggleBlockStatus = async (user) => {
+  const action = user.blocked ? 'Unblock' : 'Block'
+  const confirmMessage = user.blocked ? `Are you sure you want to unblock ${user.firstName}?` : `Are you sure you want to block ${user.firstName}?`
+
+  if (!confirm(confirmMessage)) return
+
+  try {
+    const endpoint = user.blocked ? `unblock` : `block`
+    const response = await fetch(`http://localhost:8080/WebShopAppREST/rest/users/${user.id}/${endpoint}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    })
+
+    if (!response.ok) {
+      const errorText = await response.text()
+      throw new Error(`Failed to ${action.toLowerCase()} user: ${errorText}`)
+    }
+
+    user.blocked = !user.blocked
+    await fetchUsers()
+  } catch (error) {
+    console.error(`Error ${action.toLowerCase()}ing user:`, error.message)
+    alert(`Failed to ${action.toLowerCase()} user: ${error.message}`)
+  }
 }
 
 onMounted(() => {
@@ -125,8 +157,39 @@ onMounted(() => {
 })
 </script>
 
+
 <style scoped>
-/* Stilizacija ostaje ista */
+.action-button {
+  border: none;
+  border-radius: 8px;
+  padding: 8px 15px;
+  cursor: pointer;
+  font-size: 0.9em;
+  margin-left: 15px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.block-button-style {
+  background-color: #dc3545;
+  color: white;
+}
+
+.block-button-style:hover {
+  background-color: #c82333;
+  transform: translateY(-1px);
+}
+
+.unblock-button-style {
+  background-color: #28a745;
+  color: white;
+}
+
+.unblock-button-style:hover {
+  background-color: #218838;
+  transform: translateY(-1px);
+}
+
 .user-search-container {
   text-align: center;
   padding: 30px;
@@ -283,15 +346,25 @@ h3 {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   cursor: pointer;
   transition: all 0.2s ease;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  display: flex; /* Makes user info and button align horizontally */
+  justify-content: space-between; /* Pushes info to left, button to right */
+  align-items: center; /* Vertically centers content */
 }
 
 .user-list-item:hover {
   background-color: #e6f0f7;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* New style to ensure user info is a flexible clickable area */
+.user-info-clickable {
+  flex-grow: 1; /* Allows it to take up available space */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* Optional: Add padding/margin if needed to separate from button slightly */
+  padding-right: 15px; /* Adds space between info and button */
 }
 
 .user-name {
@@ -338,6 +411,24 @@ h3 {
   .small-input {
     max-width: 100%;
   }
+
+  /* Adjust user list item for smaller screens */
+  .user-list-item {
+    flex-direction: column; /* Stack info and button vertically */
+    align-items: flex-start; /* Align content to the left */
+    gap: 10px; /* Space between info and button when stacked */
+  }
+
+  .user-info-clickable {
+    width: 100%; /* Take full width */
+    padding-right: 0; /* Remove right padding when stacked */
+  }
+
+  .action-button { /* Use the general class for adjustments */
+    width: 100%; /* Make button full width when stacked */
+    margin-left: 0; /* Remove left margin when stacked */
+    margin-top: 5px; /* Add slight top margin if needed */
+  }
 }
 
 @media (max-width: 500px) {
@@ -361,13 +452,6 @@ h3 {
   .rounded-button {
     padding: 10px 20px;
     font-size: 1em;
-  }
-
-  .user-list-item {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 5px;
-    padding: 10px 15px;
   }
 }
 </style>
