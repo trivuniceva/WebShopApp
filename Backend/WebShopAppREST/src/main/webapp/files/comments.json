@@ -196,4 +196,13 @@
   "commentDate" : [ 2025, 7, 3, 2, 6, 44, 473000000 ],
   "editDate" : null,
   "logicallyDeleted" : false
+}, {
+  "id" : "ae006d29-b0b9-4e7b-9106-d47e63d6d035",
+  "objectId" : "3504b742-f89c-4a89-9824-26d6ace1f3ba",
+  "objectType" : "IMAGE",
+  "userId" : "user_4",
+  "text" : "<3",
+  "commentDate" : [ 2025, 7, 3, 2, 30, 39, 308000000 ],
+  "editDate" : null,
+  "logicallyDeleted" : false
 } ]

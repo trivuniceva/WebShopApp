@@ -1,6 +1,7 @@
 package services;
 
 import model.Image;
+import storage.CommentFileStorage;
 import storage.ImageFileStorage;
 
 import javax.annotation.PostConstruct;
@@ -19,6 +20,7 @@ public class ImageService {
     ServletContext ctx;
 
     private ImageFileStorage imageStorage;
+    private CommentFileStorage commentFileStorage; 
 
     @PostConstruct
     public void init() {
@@ -26,6 +28,12 @@ public class ImageService {
             ctx.setAttribute("imageStorage", new ImageFileStorage());
         }
         imageStorage = (ImageFileStorage) ctx.getAttribute("imageStorage");
+        
+        if (ctx.getAttribute("commentFileStorage") == null) {
+            ctx.setAttribute("commentFileStorage", new CommentFileStorage());
+        }
+        commentFileStorage = (CommentFileStorage) ctx.getAttribute("commentFileStorage");
+   
     }
 
     @GET
@@ -43,6 +51,17 @@ public class ImageService {
     @DELETE
     @Path("/{imageId}")
     public void deleteImage(@PathParam("imageId") String imageId) {
-        imageStorage.deleteImage(imageId);
+    	Image imageToDelete = imageStorage.findById(imageId);
+
+        if (imageToDelete != null) {
+            System.out.println(imageToDelete.getCommentIds());
+            if (imageToDelete.getCommentIds() != null) {
+                for (String commentId : imageToDelete.getCommentIds()) {
+                   commentFileStorage.deleteComment(commentId);
+                   
+                }
+            }
+            imageStorage.deleteImage(imageId);
+        }
     }
 }

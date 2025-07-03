@@ -4,7 +4,7 @@ export default class User {
                     username = '',
                     firstName = '',
                     lastName = '',
-                    email = '',
+                    emailAddress = '',
                     dateOfBirth = '',
                     gender = '',
                     role = '',
@@ -19,7 +19,7 @@ export default class User {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.email = email;
+        this.emailAddress = emailAddress;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
         this.role = role;
