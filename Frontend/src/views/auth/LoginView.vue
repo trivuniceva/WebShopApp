@@ -42,12 +42,20 @@ const store = useStore()
 const handleLogin = async () => {
   try {
     const user = await loginUser({ username: username.value, password: password.value })
-    console.log("Login success:", user) // proveri da li ima id
+    console.log("Login success:", user)
     store.commit('setLoggedUser', user)
     localStorage.setItem('loggedUser', JSON.stringify(user))
     router.push('/profile')
   } catch (err) {
-    errorMessage.value = 'Pogrešan username ili lozinka'
+    console.error('Login error:', err);
+
+    if (err.response && err.response.data) {
+      errorMessage.value = err.response.data.message || 'Došlo je do greške prilikom prijave.';
+    } else if (err.message) {
+      errorMessage.value = err.message;
+    } else {
+      errorMessage.value = 'Pogrešan username ili lozinka.';
+    }
   }
 }
 </script>

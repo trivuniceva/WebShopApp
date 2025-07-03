@@ -51,7 +51,7 @@
   "text" : "p1\n",
   "commentIds" : [ ],
   "creationDate" : "2025-07-03T03:04:11.407Z",
-  "logicallyDeleted" : false
+  "logicallyDeleted" : true
 }, {
   "id" : "bce81bea-59f4-481f-8b20-93d7efa64140",
   "userId" : "user_3",

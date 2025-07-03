@@ -43,6 +43,11 @@ public class LoginService {
         if (user == null || user.getPassword() == null || !user.getPassword().equals(request.getPassword())) {
             return Response.status(401).entity("Pogrešan username ili lozinka.").build();
         }
+        
+        if (user.isBlocked()) {
+            System.out.println("Pokušaj prijave blokiranog korisnika: " + request.getUsername());
+            return Response.status(403).entity("Vaš nalog je blokiran.").build(); // 403 Forbidden status
+        }
 
         httpRequest.getSession().setAttribute("user", user);
         return Response.ok(user).build();

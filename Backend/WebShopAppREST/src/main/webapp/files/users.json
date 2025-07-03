@@ -66,11 +66,11 @@
   "gender" : "Male",
   "role" : "User",
   "profilePicturePath" : "/images/profile/marko.jpg",
-  "postIds" : [ "e44c17b3-1154-447f-a1b5-58aef550b02f", "bce81bea-59f4-481f-8b20-93d7efa64140" ],
+  "postIds" : [ ],
   "imageIds" : [ "image_13", "image_14", "image_15", "image_16", "image_17" ],
   "friendRequestsSent" : [ "8436efcf-0138-46e1-a7e9-50d74ac69a41" ],
   "friendRequestsReceived" : [ ],
-  "friendListIds" : [ "user_1" ],
+  "friendListIds" : [ "user_1", "user_4" ],
   "privateAccount" : false,
   "logicallyDeleted" : false,
   "blocked" : false
@@ -89,8 +89,8 @@
   "imageIds" : [ "image_18", "image_19", "image_20", "image_21", "image_22", "3504b742-f89c-4a89-9824-26d6ace1f3ba", "fc3d24fc-9a4c-4fb7-8f3d-82bfee9ed0a0" ],
   "friendRequestsSent" : [ ],
   "friendRequestsReceived" : [ ],
-  "friendListIds" : [ "user_2" ],
+  "friendListIds" : [ "user_2", "user_3" ],
   "privateAccount" : true,
   "logicallyDeleted" : false,
-  "blocked" : false
+  "blocked" : true
 } ]
