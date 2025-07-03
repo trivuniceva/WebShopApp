@@ -3,24 +3,25 @@ package services;
 import model.Post;
 import storage.PostFileStorage;
 import storage.UserFileStorage;
+import storage.CommentFileStorage; // <--- NEW Import: for deleting comments
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response; // Make sure Response is imported
+import javax.ws.rs.core.Response;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Base64; // For Base64 decoding
+import java.util.Base64;
 import java.util.List;
 
 @Path("/posts")
 @Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON) // <--- Back to JSON
+@Consumes(MediaType.APPLICATION_JSON)
 public class PostService {
 
     @Context
@@ -28,8 +29,9 @@ public class PostService {
 
     private PostFileStorage postStorage;
     private UserFileStorage userFileStorage;
+    private CommentFileStorage commentFileStorage; // <--- NEW: Comment storage
 
-    private String imagesUploadBasePath; // Changed name for clarity
+    private String imagesUploadBasePath;
 
     @PostConstruct
     public void init() {
@@ -43,45 +45,41 @@ public class PostService {
         }
         userFileStorage = (UserFileStorage) ctx.getAttribute("userFileStorage");
 
-        // Set the base path for saving images.
-        // This will be the absolute path to your deployed webapp's 'files/images' folder.
-        // E.g., /Users/nikolina/web/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/wtpwebapps/WebShopAppREST/files/images
+        // --- NEW: Initialize CommentFileStorage ---
+        if (ctx.getAttribute("commentFileStorage") == null) {
+            ctx.setAttribute("commentFileStorage", new CommentFileStorage());
+        }
+        commentFileStorage = (CommentFileStorage) ctx.getAttribute("commentFileStorage");
+        // --- END NEW ---
+
         imagesUploadBasePath = ctx.getRealPath("") + File.separator + "files" + File.separator + "images";
         File uploadDir = new File(imagesUploadBasePath);
         if (!uploadDir.exists()) {
-            uploadDir.mkdirs(); // Create the directory if it doesn't exist
+            uploadDir.mkdirs();
         }
         System.out.println("Image upload base directory: " + imagesUploadBasePath);
     }
 
     @GET
     @Path("/user/{userId}")
-    // @Produces(MediaType.APPLICATION_JSON) // Already at class level
     public List<Post> getPostsByUser(@PathParam("userId") String userId) {
         return postStorage.getPostsByUser(userId);
     }
 
     @POST
     @Path("/add")
-    // @Consumes(MediaType.APPLICATION_JSON) // Already at class level
-    public Response addPost(Post post) { // Now accepts Post directly
+    public Response addPost(Post post) {
 
-        // 1. Handle image upload if base64Image is provided
         if (post.getBase64Image() != null && !post.getBase64Image().isEmpty()) {
             try {
-                // Ensure the imagePath is set by the frontend correctly
-                // e.g., /WebShopAppREST/files/images/postId_filename.jpg
                 if (post.getImagePath() == null || post.getImagePath().isEmpty()) {
-                    // This should not happen if frontend sets it correctly, but as a fallback
-                    // you might generate a default name or return an error.
                     return Response.status(Response.Status.BAD_REQUEST).entity("Image path not provided for base64 image.").build();
                 }
 
-                // Extract just the filename from the web-accessible imagePath
                 String fileName = new File(post.getImagePath()).getName();
                 String fullFilePath = imagesUploadBasePath + File.separator + fileName;
 
-                byte[] decodedBytes = Base64.getDecoder().decode(post.getBase64Image()); // Decode Base64 string
+                byte[] decodedBytes = Base64.getDecoder().decode(post.getBase64Image());
 
                 try (FileOutputStream fos = new FileOutputStream(new File(fullFilePath))) {
                     fos.write(decodedBytes);
@@ -96,17 +94,13 @@ public class PostService {
                 return Response.status(Response.Status.BAD_REQUEST)
                                .entity("Invalid Base64 image data: " + e.getMessage()).build();
             }
-            // Clear the base64Image field from the Post object
-            // so it's not saved to the JSON file (it's binary data, not metadata)
             post.setBase64Image(null);
         } else {
-            // If no base64Image was provided, ensure imagePath is null
             post.setImagePath(null);
         }
 
-        // 2. Add the post metadata to storage
         try {
-            postStorage.addPost(post); // This saves the Post object (without base64Image)
+            postStorage.addPost(post);
 
             var user = userFileStorage.findById(post.getUserId());
             if (user != null) {
@@ -125,4 +119,36 @@ public class PostService {
                            .entity("Error adding post to storage: " + e.getMessage()).build();
         }
     }
+
+    // --- NEW ENDPOINT: Delete Post ---
+    @DELETE
+    @Path("/{postId}")
+    public Response deletePost(@PathParam("postId") String postId) {
+        Post postToDelete = postStorage.findById(postId);
+        
+        if (postToDelete == null) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Post not found or already deleted.").build();
+        }
+
+        try {
+            commentFileStorage.loadComments(); // Ensure comments are loaded before deletion
+
+            System.out.println("Deleting comments for post: " + postToDelete.getId());
+            if (postToDelete.getCommentIds() != null) {
+                for (String commentId : postToDelete.getCommentIds()) {
+                    commentFileStorage.deleteComment(commentId);
+                    System.out.println("Deleted comment with ID: " + commentId);
+                }
+            }
+
+            postStorage.deletePost(postId);
+            System.out.println("Post logically deleted: " + postId);
+            return Response.ok().build(); // Return 200 OK
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                           .entity("Error deleting post: " + e.getMessage()).build();
+        }
+    }
+    // --- END NEW ENDPOINT ---
 }

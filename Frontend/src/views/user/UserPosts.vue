@@ -5,7 +5,6 @@
           v-for="post in postsWithImages"
           :key="post.id"
           class="post-card"
-          @click="openPostPopup(post)"
       >
         <img
             v-if="isValidImagePath(post.imagePath)"
@@ -17,6 +16,7 @@
         <div class="post-content">
           <p class="post-text">{{ post.text }}</p>
           <p class="post-date">{{ formatDate(post.creationDate) }}</p>
+          <button @click.stop="confirmDeletePost(post.id)" class="delete-post-btn">Delete Post</button>
         </div>
       </div>
     </div>
@@ -99,9 +99,41 @@ const isValidImagePath = (path) => {
 const postsWithImages = computed(() =>
     posts.value
 )
+
+// --- NEW FUNCTION: Delete Post ---
+const confirmDeletePost = async (postId) => {
+  if (confirm('Are you sure you want to delete this post? This will also delete all associated comments.')) {
+    try {
+      await axios.delete(`http://localhost:8080/WebShopAppREST/rest/posts/${postId}`);
+      alert('Post deleted successfully!');
+      fetchPosts(); // Refresh the list of posts after deletion
+    } catch (error) {
+      console.error('Error deleting post:', error);
+      alert('Failed to delete post. Please try again.');
+    }
+  }
+};
+
 </script>
 
 <style scoped>
+.delete-post-btn {
+  background-color: #dc3545; /* Red color for delete */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-top: 10px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background-color 0.2s ease;
+  align-self: flex-start; /* Align button to the left if post-content is flex */
+}
+
+.delete-post-btn:hover {
+  background-color: #c82333;
+}
+
 .user-posts-container {
   width: 100%;
   display: flex;

@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID; // Needed for potentially generating new IDs if not provided
 
 public class PostFileStorage {
 
@@ -37,6 +38,15 @@ public class PostFileStorage {
             posts = new ArrayList<>();
         }
     }
+
+    // --- NEW METHOD: Find Post by ID ---
+    public Post findById(String id) {
+        return posts.stream()
+                .filter(post -> post.getId().equals(id) && !post.isLogicallyDeleted())
+                .findFirst()
+                .orElse(null);
+    }
+    // --- END NEW METHOD ---
 
     public List<Post> getPostsByIds(List<String> ids) {
         List<Post> result = new ArrayList<>();
@@ -73,5 +83,13 @@ public class PostFileStorage {
         return userPosts;
     }
 
-
+    // --- NEW METHOD: Logical Delete Post ---
+    public void deletePost(String id) {
+        Post postToDelete = findById(id); // Use the findById method
+        if (postToDelete != null) {
+            postToDelete.setLogicallyDeleted(true);
+            savePosts();
+        }
+    }
+    // --- END NEW METHOD ---
 }

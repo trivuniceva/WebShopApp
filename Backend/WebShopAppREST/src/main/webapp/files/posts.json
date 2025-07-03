@@ -6,5 +6,23 @@
   "text" : "ad",
   "commentIds" : [ ],
   "creationDate" : "2025-07-03T02:41:41.739Z",
+  "logicallyDeleted" : true
+}, {
+  "id" : "827508b5-6bd5-4940-bf03-2538a18c4f17",
+  "userId" : "user_1",
+  "imagePath" : "/WebShopAppREST/files/images/827508b5-6bd5-4940-bf03-2538a18c4f17_image_22.jpg",
+  "base64Image" : null,
+  "text" : "sdasd",
+  "commentIds" : [ ],
+  "creationDate" : "2025-07-03T02:45:17.314Z",
+  "logicallyDeleted" : true
+}, {
+  "id" : "072fefbc-6c28-4761-a265-aa93fd018340",
+  "userId" : "user_1",
+  "imagePath" : "/WebShopAppREST/files/images/072fefbc-6c28-4761-a265-aa93fd018340_post_3_pic.jpg",
+  "base64Image" : null,
+  "text" : "ljiljaaniii",
+  "commentIds" : [ ],
+  "creationDate" : "2025-07-03T02:45:53.099Z",
   "logicallyDeleted" : false
 } ]
