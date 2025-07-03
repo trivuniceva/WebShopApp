@@ -24,5 +24,41 @@
   "text" : "ljiljaaniii",
   "commentIds" : [ ],
   "creationDate" : "2025-07-03T02:45:53.099Z",
+  "logicallyDeleted" : true
+}, {
+  "id" : "e4b7337c-00db-41f2-9156-2fcf6b8c7ee6",
+  "userId" : "user_1",
+  "imagePath" : "/WebShopAppREST/files/images/e4b7337c-00db-41f2-9156-2fcf6b8c7ee6_post_4_pic.jpg",
+  "base64Image" : null,
+  "text" : "<33333",
+  "commentIds" : [ ],
+  "creationDate" : "2025-07-03T02:50:17.463Z",
+  "logicallyDeleted" : true
+}, {
+  "id" : "18ac18cd-2d22-492b-ba03-17b99c984d84",
+  "userId" : "user_1",
+  "imagePath" : "/WebShopAppREST/files/images/18ac18cd-2d22-492b-ba03-17b99c984d84_post_3_pic.jpg",
+  "base64Image" : null,
+  "text" : "nmg",
+  "commentIds" : [ ],
+  "creationDate" : "2025-07-03T02:53:42.912Z",
+  "logicallyDeleted" : true
+}, {
+  "id" : "e44c17b3-1154-447f-a1b5-58aef550b02f",
+  "userId" : "user_3",
+  "imagePath" : "/WebShopAppREST/files/images/e44c17b3-1154-447f-a1b5-58aef550b02f_image_16.jpg",
+  "base64Image" : null,
+  "text" : "p1\n",
+  "commentIds" : [ ],
+  "creationDate" : "2025-07-03T03:04:11.407Z",
+  "logicallyDeleted" : false
+}, {
+  "id" : "bce81bea-59f4-481f-8b20-93d7efa64140",
+  "userId" : "user_3",
+  "imagePath" : "/WebShopAppREST/files/images/bce81bea-59f4-481f-8b20-93d7efa64140_image_17.jpg",
+  "base64Image" : null,
+  "text" : "p2",
+  "commentIds" : [ ],
+  "creationDate" : "2025-07-03T03:04:20.098Z",
   "logicallyDeleted" : false
 } ]

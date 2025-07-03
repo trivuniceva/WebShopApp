@@ -56,27 +56,26 @@ const store = useStore()
 const loggedUser = store.state.loggedUser
 
 const text = ref('')
-const selectedFile = ref(null) // Keep for filename
-const previewImage = ref('') // For local preview
-const base64ImageString = ref(null) // <--- NEW: To store the Base64 string for sending
+const selectedFile = ref(null)
+const previewImage = ref('')
+const base64ImageString = ref(null)
 const successMessage = ref('')
 const errorMessage = ref('')
 
 function onImageChange(event) {
   const file = event.target.files[0]
-  selectedFile.value = file // Keep reference to file to get its name
+  selectedFile.value = file
 
   if (file) {
     const reader = new FileReader()
     reader.onload = (e) => {
-      previewImage.value = e.target.result // For displaying preview
-      // Extract only the Base64 part (remove "data:image/jpeg;base64,")
-      base64ImageString.value = e.target.result.split(',')[1]; // <--- CRUCIAL: Get Base64 part
+      previewImage.value = e.target.result
+      base64ImageString.value = e.target.result.split(',')[1];
     }
-    reader.readAsDataURL(file) // Read file as Data URL (Base64)
+    reader.readAsDataURL(file)
   } else {
-    previewImage.value = '';
-    base64ImageString.value = null;
+    previewImage.value = ''
+    base64ImageString.value = null
   }
 }
 
@@ -90,42 +89,38 @@ async function submitPost() {
   }
 
   const postId = uuidv4()
-  let imagePath = null;
+  let imagePath = null
   if (selectedFile.value) {
-    // Construct the web-accessible path for the image
-    // Use postId to make filename unique to avoid overwrites
-    const filename = `${postId}_${selectedFile.value.name}`;
-    imagePath = `/WebShopAppREST/files/images/${filename}`;
+    const filename = `${postId}_${selectedFile.value.name}`
+    imagePath = `/WebShopAppREST/files/images/${filename}`
   }
-
 
   const post = {
     id: postId,
     userId: loggedUser.id,
-    imagePath: imagePath, // This is the path where it will be saved on the server
-    base64Image: base64ImageString.value, // <--- NEW: Send the Base64 string
+    imagePath: imagePath,
+    base64Image: base64ImageString.value,
     text: text.value,
     commentIds: [],
-    creationDate: new Date().toISOString(), // Ensure this format matches OffsetDateTime
+    creationDate: new Date().toISOString(),
     logicallyDeleted: false
   }
 
   try {
-    // Send as application/json again
-    const response = await axios.post('http://localhost:8080/WebShopAppREST/rest/posts/add', post, {
+    await axios.post('http://localhost:8080/WebShopAppREST/rest/posts/add', post, {
       headers: {
-        'Content-Type': 'application/json' // Back to JSON
+        'Content-Type': 'application/json'
       }
     })
     successMessage.value = 'Post created successfully!'
     text.value = ''
     selectedFile.value = null
     previewImage.value = ''
-    base64ImageString.value = null; // Clear Base64 string
-    document.getElementById('post-image').value = null // Clear the file input
+    base64ImageString.value = null
+    document.getElementById('post-image').value = null
   } catch (err) {
-    console.error('Error creating post:', err);
-    errorMessage.value = 'Failed to create post.' + (err.response?.data || err.message);
+    console.error('Error creating post:', err)
+    errorMessage.value = 'Failed to create post.' + (err.response?.data || err.message)
   }
 }
 </script>

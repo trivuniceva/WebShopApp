@@ -3,7 +3,7 @@ package services;
 import model.Post;
 import storage.PostFileStorage;
 import storage.UserFileStorage;
-import storage.CommentFileStorage; // <--- NEW Import: for deleting comments
+import storage.CommentFileStorage;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
@@ -29,7 +29,7 @@ public class PostService {
 
     private PostFileStorage postStorage;
     private UserFileStorage userFileStorage;
-    private CommentFileStorage commentFileStorage; // <--- NEW: Comment storage
+    private CommentFileStorage commentFileStorage;
 
     private String imagesUploadBasePath;
 
@@ -45,14 +45,17 @@ public class PostService {
         }
         userFileStorage = (UserFileStorage) ctx.getAttribute("userFileStorage");
 
-        // --- NEW: Initialize CommentFileStorage ---
         if (ctx.getAttribute("commentFileStorage") == null) {
             ctx.setAttribute("commentFileStorage", new CommentFileStorage());
         }
         commentFileStorage = (CommentFileStorage) ctx.getAttribute("commentFileStorage");
-        // --- END NEW ---
 
-        imagesUploadBasePath = ctx.getRealPath("") + File.separator + "files" + File.separator + "images";
+        String basePath = ctx.getRealPath("");
+        if (basePath.endsWith(File.separator)) {
+            basePath = basePath.substring(0, basePath.length() - 1);
+        }
+        imagesUploadBasePath = basePath + File.separator + "files" + File.separator + "images";
+
         File uploadDir = new File(imagesUploadBasePath);
         if (!uploadDir.exists()) {
             uploadDir.mkdirs();
@@ -120,7 +123,6 @@ public class PostService {
         }
     }
 
-    // --- NEW ENDPOINT: Delete Post ---
     @DELETE
     @Path("/{postId}")
     public Response deletePost(@PathParam("postId") String postId) {
@@ -131,7 +133,7 @@ public class PostService {
         }
 
         try {
-            commentFileStorage.loadComments(); // Ensure comments are loaded before deletion
+            commentFileStorage.loadComments();
 
             System.out.println("Deleting comments for post: " + postToDelete.getId());
             if (postToDelete.getCommentIds() != null) {
@@ -143,12 +145,11 @@ public class PostService {
 
             postStorage.deletePost(postId);
             System.out.println("Post logically deleted: " + postId);
-            return Response.ok().build(); // Return 200 OK
+            return Response.ok().build();
         } catch (Exception e) {
             e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                            .entity("Error deleting post: " + e.getMessage()).build();
         }
     }
-    // --- END NEW ENDPOINT ---
 }

@@ -1,26 +1,25 @@
 package model;
 
-import java.time.OffsetDateTime; // Keep OffsetDateTime as discussed
+import java.time.OffsetDateTime;
 import java.util.List;
 
 public class Post {
 
     private String id;
     private String userId;
-    private String imagePath; // This will store the web-accessible path like /files/images/xyz.jpg
-    private String base64Image; // <--- NEW FIELD: To temporarily hold the Base64 encoded image data
+    private String imagePath; 
+    private String base64Image;
     private String text;
     private List<String> commentIds;
     private OffsetDateTime creationDate;
     private boolean logicallyDeleted;
 
-    // Getters and Setters for existing fields...
 
-    public String getBase64Image() { // <--- NEW GETTER
+    public String getBase64Image() { 
         return base64Image;
     }
 
-    public void setBase64Image(String base64Image) { // <--- NEW SETTER
+    public void setBase64Image(String base64Image) { 
         this.base64Image = base64Image;
     }
 
