@@ -52,10 +52,13 @@ public class ImageService {
     @Path("/{imageId}")
     public void deleteImage(@PathParam("imageId") String imageId) {
     	Image imageToDelete = imageStorage.findById(imageId);
-
+    	commentFileStorage.loadComments();
+    	
         if (imageToDelete != null) {
+        	
             System.out.println(imageToDelete.getCommentIds());
             if (imageToDelete.getCommentIds() != null) {
+            	System.out.println("brisi komentareeee" + imageToDelete.getCommentIds());
                 for (String commentId : imageToDelete.getCommentIds()) {
                    commentFileStorage.deleteComment(commentId);
                    

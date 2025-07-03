@@ -91,6 +91,7 @@ public class CommentFileStorage {
         if (commentToDelete != null) {
             commentToDelete.setLogicallyDeleted(true);
             saveComments();
+            System.out.println("obrisan kom");
         }
     }
 }

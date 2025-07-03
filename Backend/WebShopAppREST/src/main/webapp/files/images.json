@@ -147,9 +147,9 @@
   "userId" : "user_4",
   "path" : "/images/user_uploads/image_19.jpg",
   "text" : "Evening bike ride through the park.",
-  "commentIds" : [ ],
+  "commentIds" : [ "4e15b8df-e7c8-4807-bd05-6d51a3d27e11" ],
   "uploadDate" : "2024-06-28T19:25:00",
-  "logicallyDeleted" : false
+  "logicallyDeleted" : true
 }, {
   "id" : "image_20",
   "userId" : "user_4",
@@ -179,9 +179,9 @@
   "userId" : "user_4",
   "path" : "/images/user_uploads/test1.jpg",
   "text" : "Opis",
-  "commentIds" : [ "340d070d-d4c4-47c9-bcda-dbd0fefb20ea" ],
+  "commentIds" : [ "340d070d-d4c4-47c9-bcda-dbd0fefb20ea", "9fffa50d-15ad-4ebc-b685-e53c1308f6da" ],
   "uploadDate" : "2025-07-01T01:09:06.225562",
-  "logicallyDeleted" : false
+  "logicallyDeleted" : true
 }, {
   "id" : "fc3d24fc-9a4c-4fb7-8f3d-82bfee9ed0a0",
   "userId" : "user_4",

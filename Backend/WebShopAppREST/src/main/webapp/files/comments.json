@@ -205,4 +205,22 @@
   "commentDate" : [ 2025, 7, 3, 2, 30, 39, 308000000 ],
   "editDate" : null,
   "logicallyDeleted" : false
+}, {
+  "id" : "9fffa50d-15ad-4ebc-b685-e53c1308f6da",
+  "objectId" : "3504b742-f89c-4a89-9824-26d6ace1f3ba",
+  "objectType" : "IMAGE",
+  "userId" : "user_4",
+  "text" : "novi kom za bris",
+  "commentDate" : [ 2025, 7, 3, 2, 36, 34, 791000000 ],
+  "editDate" : null,
+  "logicallyDeleted" : false
+}, {
+  "id" : "4e15b8df-e7c8-4807-bd05-6d51a3d27e11",
+  "objectId" : "image_19",
+  "objectType" : "IMAGE",
+  "userId" : "user_4",
+  "text" : "cilim crveni ",
+  "commentDate" : [ 2025, 7, 3, 2, 37, 15, 230000000 ],
+  "editDate" : null,
+  "logicallyDeleted" : true
 } ]
