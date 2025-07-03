@@ -17,7 +17,7 @@
           </div>
         </div>
 
-        <div class="dropdown" @click.stop="toggleDropdown('content')">
+        <div v-if="loggedUser.role === 'User'" class="dropdown" @click.stop="toggleDropdown('content')">
           <span class="dropdown-trigger">Content ▾</span>
           <div v-if="openDropdown === 'content'" class="dropdown-menu" @click.stop>
             <router-link to="/add-image" @click="closeDropdown">Add Image</router-link>
@@ -33,8 +33,9 @@
   </div>
 </template>
 
+
 <script>
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { mapState } from 'vuex'
 import BackgroundVideo from "@/views/BackgroundVideo.vue"
 
@@ -54,17 +55,24 @@ export default {
       openDropdown.value = null
     }
 
-    // zatvaranje dropdowna kada klikneš van navbar-a
     const handleClickOutside = (event) => {
-      if (!event.target.closest('.navbar')) {
-        closeDropdown()
+      const clickedInsideDropdown = event.target.closest('.dropdown');
+      const clickedInsideNavbar = event.target.closest('.navbar');
+
+      if (!clickedInsideDropdown && clickedInsideNavbar) {
+        closeDropdown();
+      } else if (!clickedInsideNavbar) {
+        closeDropdown();
       }
-    }
+    };
 
-    window.addEventListener('click', handleClickOutside)
+    onMounted(() => {
+      window.addEventListener('click', handleClickOutside)
+    })
 
-    // Obrati pažnju da bi bilo dobro ovo ukloniti na unmount komponenti (ako koristiš Composition API)
-    // Ovde samo demo za jednostavnost
+    onUnmounted(() => {
+      window.removeEventListener('click', handleClickOutside)
+    })
 
     return {
       openDropdown,
