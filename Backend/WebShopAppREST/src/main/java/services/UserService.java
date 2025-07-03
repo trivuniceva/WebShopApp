@@ -54,7 +54,12 @@ public class UserService {
     @PUT
     @Path("/{id}")
     public Response updateUser(@PathParam("id") String id, User updatedUser) {
-        storage.update(id, updatedUser);
+        // Proveravamo da li ID iz putanje odgovara ID-u objekta
+        if (!id.equals(updatedUser.getId())) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("User ID in path does not match object ID.").build();
+        }
+        // Direktno pozovi updateUser metodu koja prima ceo objekat
+        storage.updateUser(updatedUser); // Ovo je jednostavnije i direktnije
         return Response.ok(updatedUser).build();
     }
 
@@ -62,6 +67,7 @@ public class UserService {
     @Path("/{userId}/remove-friend/{friendId}")
     public Response removeFriend(@PathParam("userId") String userId, @PathParam("friendId") String friendId) {
         boolean success = storage.removeFriend(userId, friendId);
-        return success ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
+        // Sada će success biti true ako je uklanjanje uspelo, false inače
+        return success ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).entity("Failed to remove friend.").build();
     }
 }

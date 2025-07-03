@@ -22,4 +22,22 @@
   "receiverId" : "user_2",
   "status" : "accepted",
   "date" : [ 2025, 7, 1, 1, 32, 16, 427716000 ]
+}, {
+  "id" : "2b0ef105-14e9-4b9f-b634-9da8b939bce6",
+  "senderId" : "user_1",
+  "receiverId" : "user_2",
+  "status" : "accepted",
+  "date" : [ 2025, 7, 3, 3, 32, 12, 383641000 ]
+}, {
+  "id" : "6553c92b-c76a-4f50-8f6f-39fe764ecc23",
+  "senderId" : "user_2",
+  "receiverId" : "user_3",
+  "status" : "rejected",
+  "date" : [ 2025, 7, 3, 3, 41, 6, 631602000 ]
+}, {
+  "id" : "f239e1b5-87f1-4f3c-b2ec-c03b57cdeff9",
+  "senderId" : "user_3",
+  "receiverId" : "user_2",
+  "status" : "accepted",
+  "date" : [ 2025, 7, 3, 3, 41, 18, 167483000 ]
 } ]

@@ -1,15 +1,18 @@
 package storage;
 
-
 import model.FriendRequest;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 public class FriendRequestFileStorage {
 
@@ -23,36 +26,35 @@ public class FriendRequestFileStorage {
         loadRequests();
     }
 
-    private void loadRequests() {
+    public void loadRequests() {
         try {
             File file = new File(filePath);
-            if (!file.exists()) {
+            if (!file.exists() || file.length() == 0) {
                 requests = new ArrayList<>();
-                System.out.println("FriendRequestFileStorage: fajl ne postoji, kreiran prazan spisak.");
                 return;
             }
             requests = mapper.readValue(file, new TypeReference<List<FriendRequest>>() {});
-            System.out.println("FriendRequestFileStorage: Učitani zahtevi:");
-            for(FriendRequest r : requests) {
-                System.out.println("Request: id=" + r.getId() + ", sender=" + r.getSenderId() + ", receiver=" + r.getReceiverId() + ", status=" + r.getStatus());
-            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            requests = new ArrayList<>();
         } catch (Exception e) {
             e.printStackTrace();
             requests = new ArrayList<>();
         }
     }
 
-    private void saveRequests() {
+    public void saveRequests() {
         try {
             mapper.writerWithDefaultPrettyPrinter().writeValue(new File(filePath), requests);
+        } catch (IOException e) {
+            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public List<FriendRequest> getAllRequests() {
-        System.out.println("FriendRequestFileStorage: getAllRequests called, ukupno zahteva: " + (requests != null ? requests.size() : 0));
-        return requests;
+        return new ArrayList<>(requests);
     }
 
     public FriendRequest findById(String id) {
@@ -69,11 +71,9 @@ public class FriendRequestFileStorage {
             if (requests.get(i).getId().equals(updatedRequest.getId())) {
                 requests.set(i, updatedRequest);
                 saveRequests();
-                System.out.println("FriendRequestFileStorage: Zahtev " + updatedRequest.getId() + " je ažuriran.");
                 return;
             }
         }
-        System.out.println("FriendRequestFileStorage: Zahtev " + updatedRequest.getId() + " nije pronađen za ažuriranje.");
     }
 
     public void saveNewRequest(FriendRequest newRequest) {
@@ -82,43 +82,17 @@ public class FriendRequestFileStorage {
         }
         requests.add(newRequest);
         saveRequests();
-        System.out.println("FriendRequestFileStorage: Novi zahtev " + newRequest.getId() + " je sačuvan.");
     }
-    
+
     public List<FriendRequest> getReceivedRequests(String userId) {
-        List<FriendRequest> received = new ArrayList<>();
-        for (FriendRequest r : requests) {
-            if (r.getReceiverId().equals(userId) && "pending".equalsIgnoreCase(r.getStatus())) {
-                received.add(r);
-            }
-        }
-        return received;
+        return requests.stream()
+                .filter(fr -> fr.getReceiverId().equals(userId) && "pending".equalsIgnoreCase(fr.getStatus()))
+                .collect(Collectors.toList());
     }
 
     public List<FriendRequest> getSentRequests(String userId) {
-        List<FriendRequest> sent = new ArrayList<>();
-        for (FriendRequest r : requests) {
-            if (r.getSenderId().equals(userId) && "pending".equalsIgnoreCase(r.getStatus())) {
-                sent.add(r);
-            }
-        }
-        return sent;
+        return requests.stream()
+                .filter(fr -> fr.getSenderId().equals(userId))
+                .collect(Collectors.toList());
     }
-
-	public FriendRequest sendRequest(String senderId, String receiverId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public boolean acceptRequest(String requestId) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public boolean rejectRequest(String requestId) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-    
-
 }

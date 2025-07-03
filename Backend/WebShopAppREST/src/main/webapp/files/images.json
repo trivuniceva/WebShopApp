@@ -107,7 +107,7 @@
   "userId" : "user_3",
   "path" : "/images/user_uploads/image_14.jpg",
   "text" : "Evening bike ride through the park.",
-  "commentIds" : [ "comment_11" ],
+  "commentIds" : [ "comment_11", "e63d2a4d-6fed-4591-bbe2-6d38206cb366" ],
   "uploadDate" : "2024-06-28T19:25:00",
   "logicallyDeleted" : false
 }, {
@@ -133,7 +133,7 @@
   "text" : "Evening bike ride through the park.",
   "commentIds" : [ ],
   "uploadDate" : "2024-06-28T19:25:00",
-  "logicallyDeleted" : false
+  "logicallyDeleted" : true
 }, {
   "id" : "image_18",
   "userId" : "user_4",
@@ -198,4 +198,28 @@
   "commentIds" : null,
   "uploadDate" : null,
   "logicallyDeleted" : true
+}, {
+  "id" : "32b71769-9cd5-4f9a-9546-0ff6fdff4b45",
+  "userId" : "user_4",
+  "path" : "/images/user_uploads/image_19.jpg",
+  "text" : "cilim",
+  "commentIds" : null,
+  "uploadDate" : null,
+  "logicallyDeleted" : false
+}, {
+  "id" : "9774faa2-0902-4998-b8b8-bcf9ace7edd8",
+  "userId" : "user_4",
+  "path" : "/images/user_uploads/test2.jpg",
+  "text" : "opis",
+  "commentIds" : null,
+  "uploadDate" : null,
+  "logicallyDeleted" : false
+}, {
+  "id" : "a7904881-8579-41e5-8c84-34e25311c5da",
+  "userId" : "user_3",
+  "path" : "/images/user_uploads/image_13.jpg",
+  "text" : "pt1\n",
+  "commentIds" : null,
+  "uploadDate" : null,
+  "logicallyDeleted" : false
 } ]

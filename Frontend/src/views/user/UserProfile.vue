@@ -8,7 +8,7 @@
 
           <template v-if="loggedUser && user.id === loggedUser.id">
             <router-link to="#" @click.prevent="togglePopup" class="followers-link">
-              <strong>{{ user.friendListIds?.length || 0 }} Followers</strong>
+              <strong>{{ loggedUser.friendListIds?.length || 0 }} Friends</strong>
             </router-link>
             <router-link to="#" @click.prevent="toggleFriendRequestsPopup" class="followers-link">
               <strong>{{ pendingRequests.length }} Friend Requests</strong>
@@ -33,7 +33,7 @@
               </button>
             </div>
             <span v-else-if="isFriend(user.id)" class="pending-request-message">
-                Friends
+              Friends
             </span>
           </div>
 
@@ -75,7 +75,6 @@
         <div class="right-side">
           <div class="user-info-section">
             <button @click="togglePopupPost(null)" class="close-post-button">
-<!--              <img src="/img/icons/closeIcon.png" alt="Close" />-->
               <p>X</p>
             </button>
             <p>{{ user.firstName }}</p>
@@ -94,13 +93,13 @@
         :isVisible="isImagePopupOpen"
         :image="currentImage"
         @close="closeImagePopup"
-        @image-deleted="handleImageDeleted" v-if="isImagePopupOpen && currentImage"
+        @image-deleted="handleImageDeleted"
+        v-if="isImagePopupOpen && currentImage"
     />
 
     <FollowersPopup
         v-if="isPopupOpen && loggedUser && user.id === loggedUser.id"
-        :followers="user.friendListIds || []"
-        :close="togglePopup"
+        :followers="loggedUser.friendListIds || []" @close="togglePopup"
         @remove="handleRemoveFriend"
     />
 
@@ -108,9 +107,7 @@
         v-if="isFriendRequestsPopupOpen && loggedUser && user.id === loggedUser.id"
         :requests="pendingRequests"
         @close="toggleFriendRequestsPopup"
-        @accept="handleAcceptRequest"
-        @reject="handleRejectRequest"
-    />
+        @accept="handleAcceptRequestWrapper" @reject="handleRejectRequestWrapper" />
   </div>
 
   <div v-else class="loading-message">
@@ -146,23 +143,23 @@ const handleImageDeleted = (imageId) => {
 
 const loggedUser = computed(() => store.state.loggedUser)
 
-const isFriend = (userId) => {
-  return loggedUser.value?.friendListIds?.includes(userId)
+const isFriend = (profileUserId) => {
+  return loggedUser.value?.friendListIds?.includes(profileUserId)
 }
 
-const hasSentRequest = (userId) => {
-  return friendRequestsSent.value.some(req => req.receiverId === userId && req.status === 'pending')
+const hasSentRequest = (profileUserId) => {
+  return friendRequestsSent.value.some(req => req.receiverId === profileUserId && req.status === 'pending')
 }
 
-const hasReceivedRequest = (userId) => {
-  return friendRequestsReceived.value.some(req => req.senderId === userId && req.status === 'pending')
+const hasReceivedRequest = (profileUserId) => {
+  return friendRequestsReceived.value.some(req => req.senderId === profileUserId && req.status === 'pending')
 }
 
 const canViewContent = computed(() => {
   if (!user.value) return false
   if (!user.value.privateAccount) return true
   if (loggedUser.value && loggedUser.value.id === user.value.id) return true
-  if (loggedUser.value && user.value.friendListIds && user.value.friendListIds.includes(loggedUser.value.id)) {
+  if (loggedUser.value && user.value.friendListIds && loggedUser.value.friendListIds.includes(user.value.id)) {
     return true
   }
   return false
@@ -170,7 +167,7 @@ const canViewContent = computed(() => {
 
 const pendingRequests = computed(() =>
     friendRequestsReceived.value.filter(
-        req => req.receiverId === user.value?.id && req.status === 'pending'
+        req => req.receiverId === loggedUser.value?.id && req.status === 'pending'
     )
 )
 
@@ -196,13 +193,20 @@ async function fetchUserData(id) {
       if (receivedRequestsResponse.ok) {
         friendRequestsReceived.value = await receivedRequestsResponse.json();
       } else {
-        console.error('Failed to load received friend requests for logged user', receivedRequestsResponse.status);
+        friendRequestsReceived.value = [];
       }
+
       const sentRequestsResponse = await fetch(`http://localhost:8080/WebShopAppREST/rest/friend-requests/sent/${loggedUser.value.id}`);
       if (sentRequestsResponse.ok) {
         friendRequestsSent.value = await sentRequestsResponse.json();
       } else {
-        console.error('Failed to load sent friend requests for logged user', sentRequestsResponse.status);
+        friendRequestsSent.value = [];
+      }
+
+      const updatedLoggedUserResponse = await fetch(`http://localhost:8080/WebShopAppREST/rest/users/${loggedUser.value.id}`);
+      if (updatedLoggedUserResponse.ok) {
+        const updatedLoggedUser = await updatedLoggedUserResponse.json();
+        store.commit('setLoggedUser', updatedLoggedUser);
       }
     } else {
       friendRequestsReceived.value = [];
@@ -227,9 +231,8 @@ watch(() => route.params.id, async (newId) => {
     return;
   }
   await fetchUserData(idToFetch);
-});
+}, { immediate: true });
 
-// --- Nova stanja za pop-up slike ---
 const isImagePopupOpen = ref(false);
 const currentImage = ref(null);
 
@@ -251,12 +254,12 @@ function togglePopupPost(post) {
 
 function toggleFriendRequestsPopup() {
   isFriendRequestsPopupOpen.value = !isFriendRequestsPopupOpen.value
+  if (isFriendRequestsPopupOpen.value) {
+    fetchUserData(user.value.id);
+  }
 }
 
-// --- Funkcije za pop-up slike ---
 const openImagePopup = (image) => {
-  // Dodaj ime korisnika u objekat slike
-  // Možeš koristiti user.value.username kao uploader
   currentImage.value = { ...image, uploader: user.value?.username || 'Unknown User' };
   isImagePopupOpen.value = true;
 };
@@ -275,88 +278,58 @@ async function sendFriendRequest(receiverId) {
       body: JSON.stringify({ senderId: loggedUser.value.id, receiverId: receiverId, status: 'pending' })
     });
     if (response.ok) {
-      const newRequest = await response.json();
-      // Add the new request to the list of sent requests
-      friendRequestsSent.value.push(newRequest);
-      console.log('Friend request sent!', newRequest);
+      await fetchUserData(user.value.id);
     } else {
-      console.error('Failed to send friend request', response.status);
+      const errorBody = await response.text();
+      alert(`Failed to send friend request: ${errorBody}`);
     }
   } catch (error) {
-    console.error('Error sending friend request:', error);
+    alert('An error occurred while sending the friend request.');
   }
 }
 
-async function acceptFriendRequest(senderId) {
-  const requestToAccept = friendRequestsReceived.value.find(
-      req => req.senderId === senderId && req.receiverId === loggedUser.value.id && req.status === 'pending'
-  );
-  if (!requestToAccept) {
-    console.error('Request not found.');
-    return;
-  }
-
-  try {
-    await handleAcceptRequest(requestToAccept.id);
-
-    // Update the friend list in the Vuex store to immediately reflect the change
-    if (loggedUser.value && !loggedUser.value.friendListIds.includes(senderId)) {
-      const updatedFriends = [...loggedUser.value.friendListIds, senderId];
-      store.commit('setLoggedUser', { ...loggedUser.value, friendListIds: updatedFriends });
-    }
-
-    // Re-fetch data for the profile user to ensure UI is in sync
-    await fetchUserData(user.value.id);
-
-  } catch (error) {
-    console.error('Error accepting friend request:', error);
-  }
-}
-
-async function rejectFriendRequest(senderId) {
-  const requestToReject = friendRequestsReceived.value.find(
-      req => req.senderId === senderId && req.receiverId === loggedUser.value.id && req.status === 'pending'
-  );
-  if (!requestToReject) {
-    console.error('Request not found.');
-    return;
-  }
-
-  try {
-    await handleRejectRequest(requestToReject.id);
-    // Re-fetch data for the profile user to update the UI
-    await fetchUserData(user.value.id);
-  } catch (error) {
-    console.error('Error rejecting friend request:', error);
-  }
-}
-
-async function handleAcceptRequest(requestId) {
+async function handleAcceptRequestWrapper(requestId) {
   try {
     const response = await fetch(`http://localhost:8080/WebShopAppREST/rest/friend-requests/accept/${requestId}`, { method: 'POST' });
     if (response.ok) {
-      // Remove the accepted request from the list to hide the buttons
-      friendRequestsReceived.value = friendRequestsReceived.value.filter(req => req.id !== requestId);
+      await fetchUserData(user.value.id);
     } else {
-      console.error('Failed to accept request', response.status);
+      const errorBody = await response.text();
+      alert(`Failed to accept request: ${errorBody}`);
     }
   } catch (error) {
-    console.error('Error accepting request', error);
+    alert('An error occurred while accepting the request.');
   }
 }
 
-async function handleRejectRequest(requestId) {
+async function handleRejectRequestWrapper(requestId) {
   try {
     const response = await fetch(`http://localhost:8080/WebShopAppREST/rest/friend-requests/reject/${requestId}`, { method: 'POST' });
     if (response.ok) {
-      // Remove the rejected request from the list to hide the buttons
-      friendRequestsReceived.value = friendRequestsReceived.value.filter(req => req.id !== requestId);
+      await fetchUserData(user.value.id);
     } else {
-      console.error('Failed to reject request', response.status);
+      const errorBody = await response.text();
+      alert(`Failed to reject request: ${errorBody}`);
     }
   } catch (error) {
-    console.error('Error rejecting request', error);
+    alert('An error occurred while rejecting the request.');
   }
+}
+
+async function acceptFriendRequest(profileUserId) {
+  const requestToAccept = friendRequestsReceived.value.find(
+      req => req.senderId === profileUserId && req.receiverId === loggedUser.value.id && req.status === 'pending'
+  );
+  if (!requestToAccept) return;
+  await handleAcceptRequestWrapper(requestToAccept.id);
+}
+
+async function rejectFriendRequest(profileUserId) {
+  const requestToReject = friendRequestsReceived.value.find(
+      req => req.senderId === profileUserId && req.receiverId === loggedUser.value.id && req.status === 'pending'
+  );
+  if (!requestToReject) return;
+  await handleRejectRequestWrapper(requestToReject.id);
 }
 
 async function handleRemoveFriend(friendId) {
@@ -366,25 +339,17 @@ async function handleRemoveFriend(friendId) {
         {
           method: 'POST',
         }
-    )
+    );
     if (response.ok) {
-      // Update logged user's friend list in state and store
-      const updatedFriendList = loggedUser.value.friendListIds.filter(id => id !== friendId);
-      store.commit('setLoggedUser', { ...loggedUser.value, friendListIds: updatedFriendList });
-      // Update the profile user's friend list
-      if (user.value.friendListIds) {
-        user.value.friendListIds = user.value.friendListIds.filter(id => id !== loggedUser.value.id);
-      }
-      // Re-fetch data for a clean state
       await fetchUserData(user.value.id);
     } else {
-      console.error('Failed to remove friend', response.status)
+      const errorBody = await response.text();
+      alert(`Failed to remove friend: ${errorBody}`);
     }
   } catch (error) {
-    console.error('Error removing friend', error)
+    alert('An error occurred while removing the friend.');
   }
 }
-
 </script>
 
 <style scoped>

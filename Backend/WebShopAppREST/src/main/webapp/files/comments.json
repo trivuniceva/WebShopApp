@@ -96,7 +96,7 @@
   "text" : "Beautifully edited. Love the tones.",
   "commentDate" : [ 2024, 6, 30, 9, 0 ],
   "editDate" : null,
-  "logicallyDeleted" : false
+  "logicallyDeleted" : true
 }, {
   "id" : "9563a41f-5a2b-4d1d-820c-f0b4ff1fbfbe",
   "objectId" : "image_18",
@@ -223,4 +223,31 @@
   "commentDate" : [ 2025, 7, 3, 2, 37, 15, 230000000 ],
   "editDate" : null,
   "logicallyDeleted" : true
+}, {
+  "id" : "e63d2a4d-6fed-4591-bbe2-6d38206cb366",
+  "objectId" : "image_14",
+  "objectType" : "IMAGE",
+  "userId" : "user_3",
+  "text" : "super",
+  "commentDate" : [ 2025, 7, 3, 2, 39, 41, 584000000 ],
+  "editDate" : null,
+  "logicallyDeleted" : true
+}, {
+  "id" : "5c6235cd-1940-474a-bbb1-00608ade0c8b",
+  "objectId" : "image_1",
+  "objectType" : "IMAGE",
+  "userId" : "user_3",
+  "text" : "maline",
+  "commentDate" : [ 2025, 7, 3, 2, 41, 23, 537000000 ],
+  "editDate" : null,
+  "logicallyDeleted" : false
+}, {
+  "id" : "382437c3-a709-4a6f-aece-1ec32bc32291",
+  "objectId" : "image_14",
+  "objectType" : "IMAGE",
+  "userId" : "user_2",
+  "text" : "top",
+  "commentDate" : [ 2025, 7, 3, 2, 43, 8, 702000000 ],
+  "editDate" : null,
+  "logicallyDeleted" : false
 } ]
