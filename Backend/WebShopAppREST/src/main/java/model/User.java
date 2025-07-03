@@ -1,6 +1,7 @@
 package model;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class User {
@@ -140,6 +141,9 @@ public class User {
     }
 
     public List<String> getFriendListIds() {
+    	if (friendListIds == null) {
+            friendListIds = new ArrayList<>();
+        }
         return friendListIds;
     }
 

@@ -10,4 +10,10 @@
   "receiverId" : "user_4",
   "status" : "accepted",
   "date" : [ 2025, 7, 3, 4, 5, 48, 949007000 ]
+}, {
+  "id" : "9850fd5e-3b3d-4bd2-a838-b3519764f055",
+  "senderId" : "user_3",
+  "receiverId" : "user_4",
+  "status" : "accepted",
+  "date" : [ 2025, 7, 3, 14, 17, 0, 130721000 ]
 } ]

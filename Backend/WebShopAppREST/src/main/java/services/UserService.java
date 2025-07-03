@@ -10,7 +10,11 @@ import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Path("/users")
@@ -116,4 +120,41 @@ public class UserService {
             return Response.status(Response.Status.BAD_REQUEST).entity("Failed to remove friend.").build();
         }
     }
+    
+    @GET
+    @Path("/{userId}/common-friends/{otherUserId}")
+    public Response getCommonFriends(@PathParam("userId") String userId, @PathParam("otherUserId") String otherUserId) {
+        User user1 = getUserStorage().findById(userId);
+        User user2 = getUserStorage().findById(otherUserId);
+
+        if (user1 == null || user2 == null) {
+            return Response.status(Response.Status.NOT_FOUND).entity("One or both users not found.").build();
+        }
+
+        // Kreiranje Set-ova za brže pretraživanje
+        Set<String> user1Friends = new HashSet<>(user1.getFriendListIds());
+        Set<String> user2Friends = new HashSet<>(user2.getFriendListIds());
+
+        // Pronalaženje preseka (zajedničkih prijatelja ID-eva)
+        Set<String> commonFriendIds = user1Friends.stream()
+                                            .filter(user2Friends::contains)
+                                            .collect(Collectors.toSet());
+
+        // Konvertovanje ID-eva u objekte User
+        List<User> commonFriends = new ArrayList<>();
+        for (String friendId : commonFriendIds) {
+            User friend = getUserStorage().findById(friendId);
+            if (friend != null) {
+                // Ne šalji osetljive informacije kao što su lozinka
+                friend.setPassword(null); // Čisti lozinku pre slanja na frontend
+                friend.setFriendListIds(null); // Možda ne želiš da šalješ i njihove liste prijatelja
+                friend.setFriendRequestsReceived(null);
+                friend.setFriendRequestsSent(null);
+                commonFriends.add(friend);
+            }
+        }
+
+        return Response.ok(commonFriends).build();
+    }
+
 }

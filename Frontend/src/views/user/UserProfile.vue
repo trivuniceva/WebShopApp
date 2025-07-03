@@ -27,8 +27,8 @@
               Add Friend
             </button>
             <span v-else-if="hasSentRequest(user.id)" class="pending-request-message">
-              Request Sent
-            </span>
+        Request Sent
+      </span>
             <div v-else-if="hasReceivedRequest(user.id)" class="request-buttons-group">
               <button @click="acceptFriendRequest(user.id)" class="accept-friend-button">
                 Accept
@@ -38,10 +38,18 @@
               </button>
             </div>
           </div>
-
         </div>
         <p class="full-name">{{ user.firstName }} {{ user.lastName }}</p>
         <p class="dob">{{ user.dateOfBirth }}</p>
+
+        <div v-if="loggedUser && user.id !== loggedUser.id && commonFriends.length > 0" class="common-friends-section">
+          <p><strong>{{ commonFriends.length }} Common Friends:</strong></p>
+          <ul class="common-friends-list">
+            <li v-for="friend in commonFriends" :key="friend.id">
+              <router-link :to="`/profile/${friend.id}`">{{ friend.username }}</router-link>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
 
@@ -133,6 +141,7 @@ const user = ref(null)
 const friendRequestsReceived = ref([])
 const friendRequestsSent = ref([])
 const errorMessage = ref('')
+const commonFriends = ref([]);
 
 const userPicturesRef = ref(null);
 
@@ -158,14 +167,17 @@ const hasReceivedRequest = (profileUserId) => {
 }
 
 const canViewContent = computed(() => {
-  if (!user.value) return false
-  if (!user.value.privateAccount) return true
-  if (loggedUser.value && loggedUser.value.id === user.value.id) return true
-  if (loggedUser.value && user.value.friendListIds && loggedUser.value.friendListIds.includes(loggedUser.value.id)) {
-    return true
+  if (!user.value) return false;
+  if (!user.value.privateAccount) return true;
+
+  if (loggedUser.value && loggedUser.value.id === user.value.id) return true;
+
+  if (loggedUser.value && user.value.friendListIds && loggedUser.value.friendListIds.includes(user.value.id)) {
+    return true;
   }
-  return false
-})
+
+  return false;
+});
 
 const pendingRequests = computed(() =>
     friendRequestsReceived.value.filter(
@@ -204,7 +216,7 @@ async function fetchUserData(id) {
         friendRequestsSent.value = await sentRequestsResponse.json();
       } else {
         console.error('Failed to load sent friend requests for logged user', sentRequestsResponse.status);
-        friendRequestsSent.value = []; // Resetuj ako ne uspe
+        friendRequestsSent.value = [];
       }
 
       const updatedLoggedUserResponse = await fetch(`http://localhost:8080/WebShopAppREST/rest/users/${loggedUser.value.id}`);
@@ -216,9 +228,26 @@ async function fetchUserData(id) {
         console.error('Failed to fetch updated logged user data.');
       }
 
+      if (loggedUser.value.id !== user.value.id) {
+        const commonFriendsResponse = await fetch(`http://localhost:8080/WebShopAppREST/rest/users/${loggedUser.value.id}/common-friends/${user.value.id}`);
+        if (commonFriendsResponse.ok) {
+          commonFriends.value = await commonFriendsResponse.json();
+          console.log("Common Friends fetched:", commonFriends.value); // DODAJ OVO
+
+        } else {
+          const errorText = await commonFriendsResponse.text(); // DODAJ OVO ZA VIŠE DETALJA
+
+          console.error('Failed to load common friends', commonFriendsResponse.status);
+          commonFriends.value = [];
+        }
+      } else {
+        commonFriends.value = [];
+      }
+
     } else {
       friendRequestsReceived.value = [];
       friendRequestsSent.value = [];
+      commonFriends.value = [];
     }
 
   } catch (error) {
@@ -235,9 +264,9 @@ onMounted(async () => {
 
 watch(() => route.params.id, async (newId) => {
   const idToFetch = newId || store.state.loggedUser?.id;
-  if (user.value?.id === idToFetch) {
-    return;
-  }
+  // if (user.value?.id === idToFetch) {
+  //   return;
+  // }
   await fetchUserData(idToFetch);
 }, { immediate: true });
 
@@ -369,6 +398,55 @@ async function handleRemoveFriend(friendId) {
 </script>
 
 <style scoped>
+.common-friends-section {
+  margin-top: 20px;
+  background-color: #f0f4f8; /* Svetlija pozadina za sekciju */
+  padding: 15px 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  text-align: left;
+  width: 100%; /* Da zauzme punu širinu unutar roditelja */
+  box-sizing: border-box; /* Važno za padding */
+}
+
+.common-friends-section p {
+  margin-bottom: 10px;
+  font-size: 1.1em;
+  color: #34495e;
+}
+
+.common-friends-list {
+  list-style: none;
+  padding: 0;
+  display: flex; /* Flexbox za horizontalni raspored */
+  flex-wrap: wrap; /* Omogući prelom u novi red */
+  gap: 10px; /* Razmak između prijatelja */
+}
+
+.common-friends-list li {
+  background-color: #e9eff5; /* Još svetlija pozadina za svakog prijatelja */
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 0.95em;
+  color: #555;
+  transition: background-color 0.2s ease;
+}
+
+.common-friends-list li:hover {
+  background-color: #dbe4ec;
+}
+
+.common-friends-list li a {
+  text-decoration: none;
+  color: #f86b86; /* Koristi tvoju akcentnu boju */
+  font-weight: 500;
+}
+
+.common-friends-list li a:hover {
+  text-decoration: underline;
+  color: #e05a73;
+}
+
 .private-profile-message {
   text-align: center;
   padding: 40px 20px;
