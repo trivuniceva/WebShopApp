@@ -5,18 +5,16 @@
           v-for="post in postsWithImages"
           :key="post.id"
           class="post-card"
-          @click="openPostPopup(post)"
-      >
+          @click="openPostPopup(post)" >
         <img
             v-if="isValidImagePath(post.imagePath)"
-            :src="post.imagePath"
-            class="post-image"
+            :src="getFullImageUrl(post.imagePath)" class="post-image"
             alt="Post image"
         />
-
         <div class="post-content">
           <p class="post-text">{{ post.text }}</p>
           <p class="post-date">{{ formatDate(post.creationDate) }}</p>
+          <button @click.stop="confirmDeletePost(post.id)" class="delete-post-btn">Delete Post</button>
         </div>
       </div>
     </div>
@@ -33,8 +31,7 @@
         <button class="close-btn" @click="closePopup">X</button>
         <img
             v-if="isValidImagePath(currentPost?.imagePath)"
-            :src="currentPost.imagePath"
-            :alt="currentPost.text"
+            :src="getFullImageUrl(currentPost.imagePath)" :alt="currentPost.text"
             class="popup-image"
         />
         <p class="popup-text">{{ currentPost.text }}</p>
@@ -96,12 +93,48 @@ const isValidImagePath = (path) => {
   return path && path.trim() !== '' && !path.endsWith('null') && !path.includes('undefined');
 }
 
+const getFullImageUrl = (imagePath) => {
+  if (!imagePath) return '';
+  const backendBaseUrl = 'http://localhost:8080';
+  return `${backendBaseUrl}${imagePath}`;
+}
+
 const postsWithImages = computed(() =>
     posts.value
 )
+
+const confirmDeletePost = async (postId) => {
+  if (confirm('Are you sure you want to delete this post? This will also delete all associated comments.')) {
+    try {
+      await axios.delete(`http://localhost:8080/WebShopAppREST/rest/posts/${postId}`);
+      alert('Post deleted successfully!');
+      fetchPosts();
+    } catch (error) {
+      console.error('Error deleting post:', error);
+      alert('Failed to delete post. Please try again.');
+    }
+  }
+};
 </script>
 
 <style scoped>
+.delete-post-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-top: 10px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background-color 0.2s ease;
+  align-self: flex-start;
+}
+
+.delete-post-btn:hover {
+  background-color: #c82333;
+}
+
 .user-posts-container {
   width: 100%;
   display: flex;
@@ -118,18 +151,18 @@ const postsWithImages = computed(() =>
 }
 
 .post-card {
-  background-color: #fcfcfc; /* Vrlo blaga, skoro bela pozadina */
-  border: 1px solid #eee; /* Suptilan border */
+  background-color: #fcfcfc;
+  border: 1px solid #eee;
   border-radius: 12px;
   padding: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Nešto jača, ali i dalje suptilna senka */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .post-card:hover {
-  transform: translateY(-3px); /* Malo se podigne */
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1); /* Senka postane izraženija */
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
 }
 
 .post-image {
@@ -137,7 +170,7 @@ const postsWithImages = computed(() =>
   max-height: 400px;
   object-fit: cover;
   border-radius: 10px;
-  margin-bottom: 15px; /* Povećan razmak ispod slike */
+  margin-bottom: 15px;
 }
 
 .post-content {
@@ -148,7 +181,7 @@ const postsWithImages = computed(() =>
   font-size: 1.1rem;
   color: #2c3e50;
   margin-bottom: 8px;
-  line-height: 1.5; /* Poboljšana čitljivost teksta */
+  line-height: 1.5;
 }
 
 .post-date {
@@ -175,30 +208,30 @@ const postsWithImages = computed(() =>
 }
 
 .post-popup-content {
-  background-color: #ffffff; /* Bela pozadina popupa */
-  padding: 30px; /* Povećan padding */
-  border-radius: 18px; /* Veći border-radius */
-  width: 65%; /* Malo širi popup */
-  max-width: 700px; /* Maksimalna širina */
-  max-height: 85%; /* Malo veća visina */
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 18px;
+  width: 65%;
+  max-width: 700px;
+  max-height: 85%;
   overflow-y: auto;
   text-align: center;
   position: relative;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25); /* Jača senka */
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
   color: #2c3e50;
 }
 
 .popup-image {
   max-width: 100%;
-  max-height: 500px; /* Ograniči visinu slike u popupu */
-  object-fit: contain; /* Sliku smesti unutar okvira */
+  max-height: 500px;
+  object-fit: contain;
   border-radius: 12px;
-  margin-bottom: 20px; /* Povećan razmak */
+  margin-bottom: 20px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .popup-text {
-  font-size: 1.25rem; /* Malo veći font */
+  font-size: 1.25rem;
   margin-bottom: 10px;
   font-weight: 500;
   line-height: 1.6;
@@ -219,14 +252,14 @@ const postsWithImages = computed(() =>
 
 .close-btn {
   position: absolute;
-  top: 15px; /* Povećan razmak */
-  right: 15px; /* Povećan razmak */
+  top: 15px;
+  right: 15px;
   background-color: #f86b86;
   border: none;
   color: white;
   border-radius: 50%;
-  width: 34px; /* Veće dugme */
-  height: 34px; /* Veće dugme */
+  width: 34px;
+  height: 34px;
   font-size: 1.1rem;
   cursor: pointer;
   transition: background-color 0.2s ease, transform 0.2s ease;
@@ -238,7 +271,6 @@ const postsWithImages = computed(() =>
   transform: translateY(-1px);
 }
 
-/* Media Queries */
 @media (max-width: 768px) {
   .post-card {
     padding: 12px;

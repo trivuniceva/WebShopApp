@@ -28,7 +28,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
 const props = defineProps({
@@ -55,17 +55,28 @@ const fetchUserDetails = async (userId) => {
   }
 }
 
-onMounted(async () => {
-  if (props.requests.length > 0) {
-    const promises = props.requests.map(async (req) => {
+const populateRequestsDetails = async (reqs) => {
+  isLoading.value = true;
+  if (reqs.length > 0) {
+    const promises = reqs.map(async (req) => {
       const userDetails = await fetchUserDetails(req.senderId)
       return userDetails ? { ...req, senderDetails: userDetails } : null
     })
     const results = await Promise.all(promises)
     requestsWithDetails.value = results.filter(req => req !== null)
+  } else {
+    requestsWithDetails.value = [];
   }
-  isLoading.value = false
+  isLoading.value = false;
+};
+
+onMounted(async () => {
+  await populateRequestsDetails(props.requests);
 })
+
+watch(() => props.requests, async (newRequests) => {
+  await populateRequestsDetails(newRequests);
+}, { deep: true, immediate: true });
 
 function openProfile(userId) {
   emit('close')
@@ -74,7 +85,6 @@ function openProfile(userId) {
 </script>
 
 <style scoped>
-/* Sav CSS kod iz vase komponente za followere, ovde se prekopira */
 .popup-overlay {
   position: fixed;
   top: 0;
@@ -174,7 +184,7 @@ function openProfile(userId) {
   font-size: 1.1em;
   color: #333;
   font-weight: 500;
-  cursor: pointer; /* Dodajemo pointer kursor */
+  cursor: pointer;
 }
 
 .remove-follower-button {
@@ -202,7 +212,6 @@ function openProfile(userId) {
   padding: 20px;
 }
 
-/* Scrollbar styling */
 .follower-list-container::-webkit-scrollbar {
   width: 8px;
 }
@@ -221,7 +230,6 @@ function openProfile(userId) {
   background: #bbb;
 }
 
-/* Animations */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -232,7 +240,6 @@ function openProfile(userId) {
   to { transform: translateY(0); opacity: 1; }
 }
 
-/* Media Queries for responsiveness */
 @media (max-width: 768px) {
   .popup-window {
     padding: 20px;

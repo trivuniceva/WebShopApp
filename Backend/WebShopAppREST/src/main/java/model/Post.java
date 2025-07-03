@@ -1,18 +1,27 @@
 package model;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 public class Post {
 
     private String id;
     private String userId;
-    private String imagePath;
+    private String imagePath; 
+    private String base64Image;
     private String text;
     private List<String> commentIds;
-    private LocalDateTime creationDate;
+    private OffsetDateTime creationDate;
     private boolean logicallyDeleted;
 
+
+    public String getBase64Image() { 
+        return base64Image;
+    }
+
+    public void setBase64Image(String base64Image) { 
+        this.base64Image = base64Image;
+    }
 
     public String getId() {
         return id;
@@ -54,11 +63,11 @@ public class Post {
         this.commentIds = commentIds;
     }
 
-    public LocalDateTime getCreationDate() {
+    public OffsetDateTime getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(LocalDateTime creationDate) {
+    public void setCreationDate(OffsetDateTime creationDate) {
         this.creationDate = creationDate;
     }
 

@@ -58,6 +58,7 @@ const loggedUser = store.state.loggedUser
 const text = ref('')
 const selectedFile = ref(null)
 const previewImage = ref('')
+const base64ImageString = ref(null)
 const successMessage = ref('')
 const errorMessage = ref('')
 
@@ -67,10 +68,14 @@ function onImageChange(event) {
 
   if (file) {
     const reader = new FileReader()
-    reader.onload = () => {
-      previewImage.value = reader.result
+    reader.onload = (e) => {
+      previewImage.value = e.target.result
+      base64ImageString.value = e.target.result.split(',')[1];
     }
     reader.readAsDataURL(file)
+  } else {
+    previewImage.value = ''
+    base64ImageString.value = null
   }
 }
 
@@ -84,10 +89,17 @@ async function submitPost() {
   }
 
   const postId = uuidv4()
+  let imagePath = null
+  if (selectedFile.value) {
+    const filename = `${postId}_${selectedFile.value.name}`
+    imagePath = `/WebShopAppREST/files/images/${filename}`
+  }
+
   const post = {
     id: postId,
     userId: loggedUser.id,
-    imagePath: selectedFile.value ? `/images/posts/${selectedFile.value.name}` : null,
+    imagePath: imagePath,
+    base64Image: base64ImageString.value,
     text: text.value,
     commentIds: [],
     creationDate: new Date().toISOString(),
@@ -95,14 +107,20 @@ async function submitPost() {
   }
 
   try {
-    const response = await axios.post('http://localhost:8080/WebShopAppREST/rest/posts/add', post)
+    await axios.post('http://localhost:8080/WebShopAppREST/rest/posts/add', post, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
     successMessage.value = 'Post created successfully!'
     text.value = ''
     selectedFile.value = null
     previewImage.value = ''
+    base64ImageString.value = null
     document.getElementById('post-image').value = null
   } catch (err) {
-    errorMessage.value = 'Failed to create post.'
+    console.error('Error creating post:', err)
+    errorMessage.value = 'Failed to create post.' + (err.response?.data || err.message)
   }
 }
 </script>

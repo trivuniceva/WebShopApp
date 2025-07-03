@@ -1,81 +1,64 @@
 [ {
-  "id" : "post_1",
+  "id" : "4a9c6b6e-f7f3-4602-98d2-fbe4aab4131c",
   "userId" : "user_1",
-  "imagePath" : "/images/posts/post_1_pic.jpg",
-  "text" : "Enjoying nature! Beautiful day for a walk. #nature #walk",
-  "commentIds" : [ "comment_1" ],
-  "creationDate" : "2024-06-26T10:30:00",
-  "logicallyDeleted" : false
-}, {
-  "id" : "post_2",
-  "userId" : "user_1",
-  "imagePath" : null,
-  "text" : "Today I learned something new about programming. Fascinating!",
+  "imagePath" : "/WebShopAppREST/files/images/4a9c6b6e-f7f3-4602-98d2-fbe4aab4131c_image_4.jpg",
+  "base64Image" : null,
+  "text" : "ad",
   "commentIds" : [ ],
-  "creationDate" : "2024-06-26T14:00:00",
-  "logicallyDeleted" : false
+  "creationDate" : "2025-07-03T02:41:41.739Z",
+  "logicallyDeleted" : true
 }, {
-  "id" : "post_3",
+  "id" : "827508b5-6bd5-4940-bf03-2538a18c4f17",
   "userId" : "user_1",
-  "imagePath" : "/images/posts/post_3_pic.jpg",
-  "text" : "New cake recipe, you must try it!",
-  "commentIds" : [ "comment_2" ],
-  "creationDate" : "2024-06-25T18:00:00",
-  "logicallyDeleted" : false
-}, {
-  "id" : "post_4",
-  "userId" : "user_1",
-  "imagePath" : "/images/posts/post_4_pic.jpg",
-  "text" : "Sunset views never get old. #sunset #relax",
-  "commentIds" : [ "comment_3" ],
-  "creationDate" : "2024-06-27T20:15:00",
-  "logicallyDeleted" : false
-}, {
-  "id" : "post_5",
-  "userId" : "user_1",
-  "imagePath" : null,
-  "text" : "Just finished reading an amazing book on mindfulness. Highly recommend!",
+  "imagePath" : "/WebShopAppREST/files/images/827508b5-6bd5-4940-bf03-2538a18c4f17_image_22.jpg",
+  "base64Image" : null,
+  "text" : "sdasd",
   "commentIds" : [ ],
-  "creationDate" : "2024-06-28T09:45:00",
-  "logicallyDeleted" : false
+  "creationDate" : "2025-07-03T02:45:17.314Z",
+  "logicallyDeleted" : true
 }, {
-  "id" : "post_6",
+  "id" : "072fefbc-6c28-4761-a265-aa93fd018340",
   "userId" : "user_1",
-  "imagePath" : null,
-  "text" : "Weekend hike was so refreshing. Need to do this more often!",
-  "commentIds" : [ "comment_4" ],
-  "creationDate" : "2024-06-29T08:30:00",
-  "logicallyDeleted" : false
+  "imagePath" : "/WebShopAppREST/files/images/072fefbc-6c28-4761-a265-aa93fd018340_post_3_pic.jpg",
+  "base64Image" : null,
+  "text" : "ljiljaaniii",
+  "commentIds" : [ ],
+  "creationDate" : "2025-07-03T02:45:53.099Z",
+  "logicallyDeleted" : true
 }, {
-  "id" : "post_7",
+  "id" : "e4b7337c-00db-41f2-9156-2fcf6b8c7ee6",
   "userId" : "user_1",
-  "imagePath" : null,
-  "text" : "Trying out a new coding challenge today. Wish me luck!",
+  "imagePath" : "/WebShopAppREST/files/images/e4b7337c-00db-41f2-9156-2fcf6b8c7ee6_post_4_pic.jpg",
+  "base64Image" : null,
+  "text" : "<33333",
   "commentIds" : [ ],
-  "creationDate" : "2024-06-30T11:00:00",
-  "logicallyDeleted" : false
+  "creationDate" : "2025-07-03T02:50:17.463Z",
+  "logicallyDeleted" : true
 }, {
-  "id" : "post_8",
+  "id" : "18ac18cd-2d22-492b-ba03-17b99c984d84",
   "userId" : "user_1",
-  "imagePath" : "/images/posts/post_8_pic.jpg",
-  "text" : "Delicious homemade pasta dinner tonight. #foodie #homemade",
-  "commentIds" : [ "comment_6" ],
-  "creationDate" : "2024-07-01T19:20:00",
+  "imagePath" : "/WebShopAppREST/files/images/18ac18cd-2d22-492b-ba03-17b99c984d84_post_3_pic.jpg",
+  "base64Image" : null,
+  "text" : "nmg",
+  "commentIds" : [ ],
+  "creationDate" : "2025-07-03T02:53:42.912Z",
+  "logicallyDeleted" : true
+}, {
+  "id" : "e44c17b3-1154-447f-a1b5-58aef550b02f",
+  "userId" : "user_3",
+  "imagePath" : "/WebShopAppREST/files/images/e44c17b3-1154-447f-a1b5-58aef550b02f_image_16.jpg",
+  "base64Image" : null,
+  "text" : "p1\n",
+  "commentIds" : [ ],
+  "creationDate" : "2025-07-03T03:04:11.407Z",
   "logicallyDeleted" : false
 }, {
-  "id" : "ed560181-41b7-4671-a761-b1ede0ffcb3b",
-  "userId" : "user_4",
-  "imagePath" : null,
-  "text" : "Post 1",
+  "id" : "bce81bea-59f4-481f-8b20-93d7efa64140",
+  "userId" : "user_3",
+  "imagePath" : "/WebShopAppREST/files/images/bce81bea-59f4-481f-8b20-93d7efa64140_image_17.jpg",
+  "base64Image" : null,
+  "text" : "p2",
   "commentIds" : [ ],
-  "creationDate" : "2025-06-30T23:20:13.737",
-  "logicallyDeleted" : false
-}, {
-  "id" : "43217166-8547-492f-aaa8-f9d61cfb5e70",
-  "userId" : "user_4",
-  "imagePath" : null,
-  "text" : "post <333",
-  "commentIds" : [ ],
-  "creationDate" : "2025-06-30T23:22:08.885",
+  "creationDate" : "2025-07-03T03:04:20.098Z",
   "logicallyDeleted" : false
 } ]
