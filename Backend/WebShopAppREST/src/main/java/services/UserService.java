@@ -1,66 +1,67 @@
 package services;
 
-
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import model.User;
 import storage.UserFileStorage;
 
+import javax.annotation.PostConstruct;
+import javax.servlet.ServletContext;
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
+import java.io.InputStream;
+import java.util.List;
+import java.util.stream.Collectors;
 
+@Path("/users")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class UserService {
 
-    private UserFileStorage userFileStorage;
+    @Context
+    ServletContext ctx;
 
-    public void updateUserInfo(String id, User updatedUser) {
+    private UserFileStorage storage;
 
-        User existingUser = userFileStorage.findById(id);
-
-        if(existingUser == null){
-            System.out.println("Korisnik nije pronadjen");
-            return;
+    @PostConstruct
+    public void init() {
+        if (ctx.getAttribute("userStorage") == null) {
+            ctx.setAttribute("userStorage", new UserFileStorage());
         }
-
-        updatedUser.setId(existingUser.getId());
-
-        if (updatedUser.getPassword() == null || updatedUser.getPassword().isEmpty()) {
-            updatedUser.setPassword(existingUser.getPassword());
-        }
-
-        if (updatedUser.getUsername() == null) updatedUser.setUsername(existingUser.getUsername());
-        if (updatedUser.getEmailAddress() == null) updatedUser.setEmailAddress(existingUser.getEmailAddress());
-        if (updatedUser.getFirstName() == null) updatedUser.setFirstName(existingUser.getFirstName());
-        if (updatedUser.getLastName() == null) updatedUser.setLastName(existingUser.getLastName());
-        if (updatedUser.getDateOfBirth() == null) updatedUser.setDateOfBirth(existingUser.getDateOfBirth());
-        if (updatedUser.getGender() == null) updatedUser.setGender(existingUser.getGender());
-        if (updatedUser.getRole() == null) updatedUser.setRole(existingUser.getRole());
-        if (updatedUser.getProfilePicturePath() == null) updatedUser.setProfilePicturePath(existingUser.getProfilePicturePath());
-        if (updatedUser.getFriendListIds() == null) updatedUser.setFriendListIds(existingUser.getFriendListIds());
-        if (updatedUser.getPostIds() == null) updatedUser.setPostIds(existingUser.getPostIds());
-        if (updatedUser.getImageIds() == null) updatedUser.setImageIds(existingUser.getImageIds());
-        if (updatedUser.getFriendRequestsSent() == null) updatedUser.setFriendRequestsSent(existingUser.getFriendRequestsSent());
-        if (updatedUser.getFriendRequestsReceived() == null) updatedUser.setFriendRequestsReceived(existingUser.getFriendRequestsReceived());
-
-        updatedUser.setPrivateAccount(updatedUser.isPrivateAccount());
-
-        userFileStorage.updateUser(updatedUser);
-
+        storage = (UserFileStorage) ctx.getAttribute("userStorage");
     }
 
-    public User findUserById(String id) {
-        return userFileStorage.findById(id);
+    @GET
+    public Response getAllUsers() {
+        List<User> users = storage.getAllUsers();
+        List<User> nonAdminUsers = users.stream()
+                .filter(user -> !"Administrator".equals(user.getRole()))
+                .collect(Collectors.toList());
+        return Response.ok(nonAdminUsers).build();
     }
-    
-//
-//    public ResponseEntity<String> removeFriend(String userId, String friendId) {
-//        User user = userFileStorage.findById(userId);
-//        User friend = userFileStorage.findById(friendId);
-//        if (user == null || friend == null) {
-//            return ResponseEntity.badRequest().body("User not found");
-//        }
-//        user.getFriendListIds().remove(friendId);
-//        friend.getFriendListIds().remove(userId);
-//        userFileStorage.updateUser(user);
-//        userFileStorage.updateUser(friend);
-//
-//        return ResponseEntity.ok("Friend removed");
-//    }
+
+    @GET
+    @Path("/{id}")
+    public Response getUserById(@PathParam("id") String id) {
+        User user = storage.findById(id);
+        if (user != null) {
+            return Response.ok(user).build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @PUT
+    @Path("/{id}")
+    public Response updateUser(@PathParam("id") String id, User updatedUser) {
+        storage.update(id, updatedUser);
+        return Response.ok(updatedUser).build();
+    }
+
+    @POST
+    @Path("/{userId}/remove-friend/{friendId}")
+    public Response removeFriend(@PathParam("userId") String userId, @PathParam("friendId") String friendId) {
+        boolean success = storage.removeFriend(userId, friendId);
+        return success ? Response.ok().build() : Response.status(Response.Status.BAD_REQUEST).build();
+    }
 }
-

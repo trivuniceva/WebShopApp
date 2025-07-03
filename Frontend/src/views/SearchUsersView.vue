@@ -75,7 +75,7 @@ const endDate = ref('')
 const sortOption = ref('firstName')
 
 const fetchUsers = async () => {
-  const response = await fetch('http://localhost:8080/api/users')
+  const response = await fetch('http://localhost:8080/WebShopAppREST/rest/users')
   if (!response.ok) {
     console.error('Ne mogu da učitam korisnike')
     return

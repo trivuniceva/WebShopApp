@@ -16,5 +16,6 @@
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/jackson-annotations-2.15.2.jar"/>
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/jackson-core-2.15.2.jar"/>
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/jackson-databind-2.15.2.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/jackson-datatype-jsr310-2.15.2.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
