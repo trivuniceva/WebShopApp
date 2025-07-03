@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class UserFileStorage {
     private final String filePath = "/Users/nikolina/Desktop/Veb programiranje - materijali/WebShop/Backend/WebShopAppREST/src/main/webapp/files/users.json";
@@ -65,13 +66,42 @@ public class UserFileStorage {
     }
 
     public void updateUser(User updatedUser) {
-        for (int i = 0; i < users.size(); i++) {
-            if (users.get(i).getId().equals(updatedUser.getId())) {
-                users.set(i, updatedUser);
-                saveUsers();
-                return;
-            }
-        }
+    	 User existingUser = findById(updatedUser.getId()); 
+         if (existingUser == null) {
+             System.out.println("User with ID " + updatedUser.getId() + " not found for update.");
+             return; 
+         }
+         
+         if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
+             existingUser.setPassword(updatedUser.getPassword());
+         }
+
+         existingUser.setEmailAddress(Objects.requireNonNullElse(updatedUser.getEmailAddress(), existingUser.getEmailAddress()));
+         existingUser.setFirstName(Objects.requireNonNullElse(updatedUser.getFirstName(), existingUser.getFirstName()));
+         existingUser.setLastName(Objects.requireNonNullElse(updatedUser.getLastName(), existingUser.getLastName()));
+         existingUser.setDateOfBirth(Objects.requireNonNullElse(updatedUser.getDateOfBirth(), existingUser.getDateOfBirth()));
+         existingUser.setGender(Objects.requireNonNullElse(updatedUser.getGender(), existingUser.getGender()));
+
+         // Booleans se direktno ažuriraju jer false/true ima smisla i ako je nepromenjeno
+         existingUser.setPrivateAccount(updatedUser.isPrivateAccount());
+         existingUser.setLogicallyDeleted(updatedUser.isLogicallyDeleted());
+         existingUser.setBlocked(updatedUser.isBlocked());
+         
+         existingUser.setPostIds(Objects.requireNonNullElse(updatedUser.getPostIds(), existingUser.getPostIds()));
+         existingUser.setImageIds(Objects.requireNonNullElse(updatedUser.getImageIds(), existingUser.getImageIds()));
+         existingUser.setFriendRequestsSent(Objects.requireNonNullElse(updatedUser.getFriendRequestsSent(), existingUser.getFriendRequestsSent()));
+         existingUser.setFriendRequestsReceived(Objects.requireNonNullElse(updatedUser.getFriendRequestsReceived(), existingUser.getFriendRequestsReceived()));
+         existingUser.setFriendListIds(Objects.requireNonNullElse(updatedUser.getFriendListIds(), existingUser.getFriendListIds()));
+
+         if (updatedUser.getProfilePicturePath() != null) {
+             existingUser.setProfilePicturePath(updatedUser.getProfilePicturePath());
+         }
+
+         // Sada kada smo ažurirali postojećeg korisnika, sačuvaj sve korisnike
+         saveUsers();
+         System.out.println("User " + existingUser.getId() + " updated successfully.");
+
+         
     }
 
     // Ova metoda je bila "TODO" i vraćala je false, sada je implementirana
